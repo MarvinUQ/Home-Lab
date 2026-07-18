@@ -1,23 +1,63 @@
-### AL ###
-#Template for AL projects for Dynamics 365 Business Central
-#launch.json folder
+# ====================================================================
+# VIRUALIZATION & OPERATING SYSTEMS
+# ====================================================================
+# Block massive virtual disks and state files from virt-manager/QEMU
+*.qcow2
+*.img
+*.vhd
+*.vhdx
+*.xml
+*.state
+
+# Block OS clutter and temporary files
+.DS_Store
+Thumbs.db
+~$*.docx
+~$*.xlsx
+~$*.pptx
+
+# ====================================================================
+# CYBERSECURITY LAB EXCLUSIONS
+# ====================================================================
+# Block raw binary artifacts and full forensic packet captures
+*.pcap
+*.pcapng
+*.evtx
+*.log
+*.audit
+*.iso
+*.vmdk
+*.ova
+
+# Block system memory dumps and master file tables
+*.dmp
+*.sys
+*.mft
+Memory.dmp
+
+# Block vulnerable database dumps from DVWA
+*.sql
+*.sqlite
+
+# ====================================================================
+# SECRETS & CREDENTIALS (NEVER COMMIT)
+# ====================================================================
+.env
+.env.*
+*.pem
+*.key
+*.pub
+*.cert
+secrets.json
+credentials.ini
+
+# ====================================================================
+# IDE & AUTOMATION SCRIPTING
+# ====================================================================
 .vscode/
-#Cache folder
-.alcache/
-#Symbols folder
-.alpackages/
-#Snapshots folder
-.snapshots/
-#Testing Output folder
-.output/
-#Extension App-file
-*.app
-#Rapid Application Development File
-rad.json
-#Translation Base-file
-*.g.xlf
-#License-files
-*.bclicense
-*.flf
-#Test results file
-TestResults.xml
+.idea/
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.ipynb_checkpoints/
