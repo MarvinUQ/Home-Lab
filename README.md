@@ -17,11 +17,15 @@ ____
 
 ### -Learning by Building. (Aprender Haciendo.)
 
-This are some of the concepts and operative systems and tools' behaviors this project has taught me so far (Estos son algunos de los conceptos y comportamientos de los sistemas operativos y herramientas que eh aprendido en este proyecto hasta el momento):
+This are some of the concepts and operative systems and tools' behaviors this project has taught me so far
+
+(Estos son algunos de los conceptos y comportamientos de los sistemas operativos y herramientas que eh aprendido en este proyecto hasta el momento):
 
 ____
 
-- The default restriction on Active Directory Domain Control -ADDC-, keeping standard accounts from log in, in order to mantain secure NTDS.dit database. Standard users can't log on via an interactive session on Domain Control, but must do it over the network via Kerberos/LDAP -Lightweight Directory Access Protocol- (Las restricciones predeterminadas del servidor ADDC mantienen fuera de acceso cuentas estándar para mantener segura la base de datos NTDS.dit. Los usuarios estándar no pueden accersar al servidor DC mediante sesión interactiva, deben hacerlo por mediante internet via Kerberos/LDAP.)
+- The default restriction on Active Directory Domain Control -ADDC-, keeping standard accounts from log in, in order to mantain secure NTDS.dit database. Standard users can't log on via an interactive session on Domain Control, but must do it over the network via Kerberos/LDAP -Lightweight Directory Access Protocol-
+
+(Las restricciones predeterminadas del servidor ADDC mantienen fuera de acceso cuentas estándar para mantener segura la base de datos NTDS.dit. Los usuarios estándar no pueden accersar al servidor DC mediante sesión interactiva, deben hacerlo por mediante internet via Kerberos/LDAP.)
   
 <img width="80%" alt="Screenshot_2026-07-18_01-05-54" src="https://github.com/user-attachments/assets/7594d2dc-f614-42cc-8113-6138569561f8" />
 
@@ -29,7 +33,15 @@ ____
 
 **The DMZ <--> MGMT connection conflict. (Conflicto de comunicación DMZ <--> MGMT.)**
 
-- With the MGMT network up and connected to pfSense and with 1514-1515 port opened to collect data from DMZ 172.16.0.1/24 Debian DVWA 172.16.0.10 and from LAN 102.168.200.1/24 Windows 11 Enterprise 102.168.200.40 and ADDC MS Server 2025 102.168.200.10, the connetion from Windos worked as it should
+- pfSense up and running
+
+<img width="978" height="373" alt="Screenshot_2026-07-24_10-43-54" src="https://github.com/user-attachments/assets/b390abef-18db-4107-bf47-ec4e3e5c9000" />
+
+- Each network connected to pfSense firewall, WAN 10.10.0.1/24 Kali linux 10.10.0.10 as external threat, MGMT 172.16.1.1/24 Ubuntu-Wazuh 172.16.1.10 it's ports 1514 opened to collect event's data from agents and 1515 for authentication from DMZ 172.16.0.1/24 Debian DVWA 172.16.0.10 and from LAN 102.168.200.1/24 Windows 11 Enterprise 102.168.200.40 and ADDC MS Server 2025 102.168.200.10, and port 443 open, to use Windows 11 as SIEM Management Console, through pfSense firewall rules.
+
+(Cada red conectada a pfSense firewall, WAN 10.10.0.1/24 Kali linux 10.10.0.10 como amenza externa, MGMT 172.16.1.1/24 Ubuntu-Wazuh 172.16.1.10 Con los puertos para colectar datos de eventos regristrados por agentes y 1515 para autenticación,)
 
 <img width="80%" alt="Screenshot_2026-07-23_22-47-34" src="https://github.com/user-attachments/assets/40858b96-750f-40d9-816d-b75d114af801" />
+
+443 port open, to use Windows 11 as SIEM Management Console,
   
