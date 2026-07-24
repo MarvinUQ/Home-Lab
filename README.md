@@ -1,6 +1,17 @@
-Homelab Project.
+# Homelab Project.
 
-The Homelab project consist of a Fedora host, Virt Manager and 
+
+
+____
+
+### -Network Architecture. (Arquitectura de Red.)
+
+Three isolated zones behind a pfSense firewall — WAN (attacker), LAN (domain-joined
+assets), DMZ (exposed web app) — plus a dedicated MGMT zone for SIEM tooling. Every
+path shown here has been tested end-to-end, not just configured. (Tres zonas aisladas
+detrás de un firewall pfSense — WAN (atacante), LAN (activos unidos al dominio), DMZ
+(aplicación web expuesta) — más una zona MGMT dedicada para herramientas SIEM. Cada
+ruta mostrada aquí fue probada de extremo a extremo, no solo configurada.)
 
 ____
 
