@@ -54,7 +54,7 @@ DMZ:
 
   **(Probando la conexión entre MGMT y LAN y MGMT y DMZ)**
 
-  Windwos to Ubuntu-Wazuh ports 443, 1514 and 1515: Working properly.
+  Windows to Ubuntu-Wazuh ports 443, 1514 and 1515: Working properly.
 
   (De Windows a Ubuntu-Wazuh los puertos 443, 1514 y 1515: Funcionando apropiadamente)
  
