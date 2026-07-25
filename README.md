@@ -38,7 +38,7 @@ ____
 <img width="80%" alt="Screenshot_2026-07-24_10-43-54" src="https://github.com/user-attachments/assets/b390abef-18db-4107-bf47-ec4e3e5c9000" />
 
 - Each network connected to pfSense firewall, WAN 10.10.0.1/24 Kali linux 10.10.0.10 external threat, MGMT 172.16.1.1/24 Ubuntu-Wazuh 172.16.1.10, it's ports 1514 opened to collect event's data from agents and 1515 for authentication from DMZ 172.16.0.1/24 Debian DVWA 172.16.0.10 and from LAN 102.168.200.1/24 Windows 11 Enterprise 102.168.200.40 and ADDC MS Server 2025 102.168.200.10, and port 443 open to use Windows 11 as SIEM Management Console, ports opened through pfSense firewall rules.
-.
+
   (Cada red conectada a pfSense firewall, WAN 10.10.0.1/24 Kali linux 10.10.0.10 amenza externa, MGMT 172.16.1.1/24 Ubuntu-Wazuh 172.16.1.10 Con los puertos para colectar datos de eventos registrados por agentes y 1515 para autenticación,provenientes de DMZ 172.16.0.1/24 Debian DVWA 172.16.0.10, de DMZ 172.16.0.1/24 Debian DVWA 172.16.0.10 y de ADDC MS Server 2025 102.168.200.10, y el puerto 443 abierto para usar Windows 11 como consola de administración SIEM, puertos abiertos mediante reglas en el firewall.)
 
 LAN:
