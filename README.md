@@ -70,7 +70,15 @@ DMZ:
 
   (Después de reiniciar: los puertos 1514 y 1515 empezaron a rechazar conexiones inesperadamente — el error real. El puerto 443 también fue rechazado, pero eso es lo esperado: DMZ nunca debía poder alcanzar el dashboard.)
 
+<img width="60%" alt="Screenshot_2026-07-23_19-16-07" src="https://github.com/user-attachments/assets/ec250bd5-df00-486f-85e4-a20af8289336" />
+
+  After looking out through pfSense firewall rules searching for configuration mistakes everything was clean, next step was checking that both Debian and Ubuntu's firewall were disable to rule out they were responsible for the connection bug.
+
+  (Despúes de revisar entre las reglas establecidas en pfSense firewall no se encontraron errores de configuración, el siguiente paso fue revisar que los firewall tanto de Debian como Ubuntu estuviesen inactivos para descartar que fuesen los causantes del error de conexión.)
+  
 <img width="60%" alt="Screenshot_2026-07-23_19-07-27" src="https://github.com/user-attachments/assets/332f3127-0594-406c-b725-366a592590d0" />
+
+
 
 
 
