@@ -114,13 +114,18 @@ ____
 
   <img width="60%" alt="Screenshot_2026-07-24_10-47-04" src="https://github.com/user-attachments/assets/64becdfb-6c23-4b9c-bd10-af29001105eb" />
 
-  **Here's the lead anomaly. Why did LAN 192.168.200.1/24 and Windows 192.168.200.40 both of them had their own mac addresses on the ARP table while Debian-DVWA and Ubuntu-Wazuh that were pinging each other after windows connection was established with pfSense don't have their respective macs on the ARP table? Only their local networks seem to have send their mac to pfSense. In normal behavior both of them would have their mac addresses in the table and with more time to expire than Windows.**
+  **Here's the lead anomaly. First, this would be normal behavior and will use LAN and Windos as examples, LAN 192.168.200.1 was assigned on pfSense as the default gateway for all devices connected to pfSense on LAN, every device on LAN with an IP address in 192.168.200.1/24 range and 192.168.200.1 as gateway will call to pfSense like as its router's gateway, pfSense assigned to this gateway 192.168.200.1 with the MAC address: 52:54:00:71:bb:23 and Windows 192.168.200.40 is correctly displaying it's NIC's MAC addres 52:54:00:e1:98:0f. both of them had their respective MAC addresses displayed on the ARP table.
+  Now the anomaly, Debian-DVWA and Ubuntu-Wazuh that were pinging each other (theorically) through prSense after windows connection was established with pfSense, don't have their respective NIC's MACs displayed on the ARP table, We can see DMZ's gateway MAC address 52:54:00:63:63:46, and MGMT's gateway MAC 52:54:00:90:dd:1f. Then why can't we see Debian-DVWA and Ubuntu-Wazuh NIC's MACs?**
+
+  **(Acá está la anomalía principal. Primero, este sería el comportamiento normal)**
 
 - Using command apr -an on pfSense's shell to corroborate no discrepancies with what was shown on WebGui.
   
   (Utilizando el comando arp -an en la linea de comandos en pfSense para corroborar que no hay discrepancias con lo mostrado en la interfaz de la web)
   
-  <img width="1030" height="192" alt="Screenshot_2026-07-24_10-54-32" src="https://github.com/user-attachments/assets/f3aedf84-0003-49f5-a614-d27ffffbd78f" />
+  <img width="60%" alt="Screenshot_2026-07-24_10-54-32" src="https://github.com/user-attachments/assets/f3aedf84-0003-49f5-a614-d27ffffbd78f" />
+
+  No discrepancies.
 
 
 
