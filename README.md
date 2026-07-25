@@ -53,10 +53,24 @@ DMZ:
 
   **(Probando la conexión entre MGMT y LAN y MGMT y DMZ)**
 
-  Windwos to Wazuh ports 443, 1514 adn 1515 working properly.
+  Windwos to Ubuntu-Wazuh ports 443, 1514 and 1515: Working properly.
 
-  (De Windows a Wazuh los puertos 443, 1514 y 1515 funcionando apropiadamente)
+  (De Windows a Ubuntu-Wazuh los puertos 443, 1514 y 1515: Funcionando apropiadamente)
  
 <img width="80%" alt="Screenshot_2026-07-23_22-47-34" src="https://github.com/user-attachments/assets/40858b96-750f-40d9-816d-b75d114af801" />
+
+  Debian-DVWA to Ubuntu-Wazuh ports 1514 and 1515: Working properly
+
+  (De Debian-DVWA a Ubuntu-Wazuh puertos 1514 y 1515: Funcionando apropiadamente)
+  
+<img width="80%" alt="Screenshot_2026-07-23_18-01-19" src="https://github.com/user-attachments/assets/2b3a98b9-4b6f-49f4-b088-378bf32017ff" />
+
+  After rebooting: Debian-DVWA to Ubuntu-Wazuh ports 1514 and 1515: Working properly
+
+  (Despúes de reiniciar: de Debian-DVWA a Ubuntu-Wazuh puertos 1514 y 1515: Funcionando apropiadamente)
+
+<img width="80%" alt="Screenshot_2026-07-23_19-07-27" src="https://github.com/user-attachments/assets/332f3127-0594-406c-b725-366a592590d0" />
+
+
 
   
