@@ -75,9 +75,11 @@ DMZ:
 - After looking out through pfSense firewall rules searching for configuration mistakes everything was clean, next step was checking that both Debian and Ubuntu's firewall were disable to rule out they were responsible for the connection bug.
 
   (Despúes de revisar entre las reglas establecidas en pfSense firewall no se encontraron errores de configuración, el siguiente paso fue revisar que los firewall tanto de Debian como Ubuntu estuviesen inactivos para descartar que fuesen los causantes del error de conexión.)
-  
+
+  Debian
 <img width="60%" alt="Screenshot_2026-07-23_19-07-27" src="https://github.com/user-attachments/assets/332f3127-0594-406c-b725-366a592590d0" />
 
+  Ubuntu
 <img width="60" alt="Screenshot_2026-07-22_18-49-34" src="https://github.com/user-attachments/assets/f0a677cc-2572-47b6-a7e6-532c3d80a303" />
 
 
