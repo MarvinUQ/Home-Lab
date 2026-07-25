@@ -65,9 +65,9 @@ DMZ:
   
 <img width="80%" alt="Screenshot_2026-07-23_18-01-19" src="https://github.com/user-attachments/assets/2b3a98b9-4b6f-49f4-b088-378bf32017ff" />
 
-  After rebooting: Debian-DVWA to Ubuntu-Wazuh ports 1514 and 1515: Working properly
+  After rebooting: Debian-DVWA to Ubuntu-Wazuh ports 1514 and 1515: Connection refused, (443 working as intended) 
 
-  (Despúes de reiniciar: de Debian-DVWA a Ubuntu-Wazuh puertos 1514 y 1515: Funcionando apropiadamente)
+  (Despúes de reiniciar: de Debian-DVWA a Ubuntu-Wazuh puertos 1514 y 1515: Conexión rechazada (443 funcionando como debe))
 
 <img width="80%" alt="Screenshot_2026-07-23_19-07-27" src="https://github.com/user-attachments/assets/332f3127-0594-406c-b725-366a592590d0" />
 
