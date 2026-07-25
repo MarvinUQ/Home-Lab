@@ -50,7 +50,7 @@ DMZ:
 <img width="80%" alt="Screenshot_2026-07-23_21-31-19" src="https://github.com/user-attachments/assets/adadd00e-d4c0-4eed-b9ae-9ab8fe13f3fc" />
 
 
-
+- Testing connection
 <img width="80%" alt="Screenshot_2026-07-23_22-47-34" src="https://github.com/user-attachments/assets/40858b96-750f-40d9-816d-b75d114af801" />
 
 443 port open, to use Windows 11 as SIEM Management Console,
