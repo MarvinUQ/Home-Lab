@@ -38,9 +38,9 @@ ____
 
 <img width="60%" alt="Screenshot_2026-07-24_10-43-54" src="https://github.com/user-attachments/assets/b390abef-18db-4107-bf47-ec4e3e5c9000" />
 
-- Each network connected to pfSense firewall, WAN 10.10.0.1/24 Kali linux 10.10.0.10 external threat, MGMT 172.16.1.1/24 Ubuntu-Wazuh 172.16.1.10, it's tcp port 1514 opened to collect event's data, logs and warnings from running agents from DMZ 172.16.0.1/24 Debian DVWA 172.16.0.10 and from LAN 102.168.200.1/24 Windows 11 Enterprise 102.168.200.40 and ADDC MS Server 2025 102.168.200.10, tcp port 1515 for agent's authentication and port 443 open to use Windows 11 as SIEM Management Console, ports opened through pfSense firewall rules.
+- Each network connected to pfSense firewall, WAN 10.10.0.1/24 Kali linux 10.10.0.10 external threat, MGMT 172.16.1.1/24 Ubuntu-Wazuh 172.16.1.10, it's tcp port 1514 opened to collect event's data, logs and warnings from running agents from DMZ 172.16.0.1/24 Debian DVWA 172.16.0.10 and from LAN 192.168.200.1/24 Windows 11 Enterprise 192.168.200.40 and ADDC MS Server 2025 192.168.200.10, tcp port 1515 for agent's authentication and port 443 open to use Windows 11 as SIEM Management Console, ports opened through pfSense firewall rules.
 
-  (Cada red conectada a pfSense firewall, WAN 10.10.0.1/24 Kali linux 10.10.0.10 amenza externa, MGMT 172.16.1.1/24 Ubuntu-Wazuh 172.16.1.10 Con el puerto tcp 1514 para colectar datos de eventos registros y advertencias enviadas por agentes activos, provenientes de DMZ 172.16.0.1/24 Debian DVWA 172.16.0.10, de DMZ 172.16.0.1/24 Debian DVWA 172.16.0.10 y de ADDC MS Server 2025 102.168.200.10, el puerto tcp 1515 para la autenticación de agentes, y el puerto 443 abierto para usar Windows 11 como consola de administración SIEM, puertos abiertos mediante reglas en pfSense firewall.)
+  (Cada red conectada a pfSense firewall, WAN 10.10.0.1/24 Kali linux 10.10.0.10 amenza externa, MGMT 172.16.1.1/24 Ubuntu-Wazuh 172.16.1.10 Con el puerto tcp 1514 para colectar datos de eventos registros y advertencias enviadas por agentes activos, provenientes de DMZ 172.16.0.1/24 Debian DVWA 172.16.0.10, de DMZ 172.16.0.1/24 Debian DVWA 172.16.0.10 y de LAN 192.168.200.1/24 Windows 11 Enterprise 192.168.200.40 y ADDC MS Server 2025 192.168.200.10, el puerto tcp 1515 para la autenticación de agentes, y el puerto 443 abierto para usar Windows 11 como consola de administración SIEM, puertos abiertos mediante reglas en pfSense firewall.)
 
 LAN:
 
@@ -66,9 +66,9 @@ DMZ:
   
 <img width="60%" alt="Screenshot_2026-07-23_18-01-19" src="https://github.com/user-attachments/assets/2b3a98b9-4b6f-49f4-b088-378bf32017ff" />
 
-  After rebooting: Debian-DVWA to Ubuntu-Wazuh ports 1514 and 1515: Connection refused, (443 working as intended) 
+  After rebooting: ports 1514 and 1515 unexpectedly started refusing connections — the actual bug. Port 443 refused too, but that one's expected: DMZ was never supposed to reach the dashboard in the first place.
 
-  (Despúes de reiniciar: de Debian-DVWA a Ubuntu-Wazuh puertos 1514 y 1515: Conexión rechazada (443 funcionando como debe))
+  (Después de reiniciar: los puertos 1514 y 1515 empezaron a rechazar conexiones inesperadamente — el error real. El puerto 443 también fue rechazado, pero eso es lo esperado: DMZ nunca debía poder alcanzar el dashboard.)
 
 <img width="60%" alt="Screenshot_2026-07-23_19-07-27" src="https://github.com/user-attachments/assets/332f3127-0594-406c-b725-366a592590d0" />
 
