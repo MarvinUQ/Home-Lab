@@ -59,20 +59,20 @@ DMZ:
   (De Windows a Ubuntu-Wazuh los puertos 443, 1514 y 1515: Funcionando apropiadamente)
  
 <img width="60%" alt="Screenshot_2026-07-23_22-47-34" src="https://github.com/user-attachments/assets/40858b96-750f-40d9-816d-b75d114af801" />
-  
-  Debian-DVWA to Ubuntu-Wazuh ports 1514 and 1515: Working properly
+
+- Debian-DVWA to Ubuntu-Wazuh ports 1514 and 1515: Working properly
   
   (De Debian-DVWA a Ubuntu-Wazuh puertos 1514 y 1515: Funcionando apropiadamente)
   
 <img width="60%" alt="Screenshot_2026-07-23_18-01-19" src="https://github.com/user-attachments/assets/2b3a98b9-4b6f-49f4-b088-378bf32017ff" />
 
-  After rebooting: ports 1514 and 1515 unexpectedly started refusing connections — the actual bug. Port 443 refused too, but that one's expected: DMZ was never supposed to reach the dashboard in the first place.
+- After rebooting: ports 1514 and 1515 unexpectedly started refusing connections — the actual bug. Port 443 refused too, but that one's expected: DMZ was never supposed to reach the dashboard in the first place.
 
   (Después de reiniciar: los puertos 1514 y 1515 empezaron a rechazar conexiones inesperadamente — el error real. El puerto 443 también fue rechazado, pero eso es lo esperado: DMZ nunca debía poder alcanzar el dashboard.)
 
 <img width="60%" alt="Screenshot_2026-07-23_19-16-07" src="https://github.com/user-attachments/assets/ec250bd5-df00-486f-85e4-a20af8289336" />
 
-  After looking out through pfSense firewall rules searching for configuration mistakes everything was clean, next step was checking that both Debian and Ubuntu's firewall were disable to rule out they were responsible for the connection bug.
+- After looking out through pfSense firewall rules searching for configuration mistakes everything was clean, next step was checking that both Debian and Ubuntu's firewall were disable to rule out they were responsible for the connection bug.
 
   (Despúes de revisar entre las reglas establecidas en pfSense firewall no se encontraron errores de configuración, el siguiente paso fue revisar que los firewall tanto de Debian como Ubuntu estuviesen inactivos para descartar que fuesen los causantes del error de conexión.)
   
