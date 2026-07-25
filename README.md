@@ -114,7 +114,14 @@ ____
 
   <img width="60%" alt="Screenshot_2026-07-24_10-47-04" src="https://github.com/user-attachments/assets/64becdfb-6c23-4b9c-bd10-af29001105eb" />
 
-  **Here's the lead anomaly, Why did LAN 192.168.200.1/24 and Windows 192.168.200.40 both of them had their own mac addresses on the ARP table while Debian-DVWA and Ubuntu-Wazuh that were pinging each other after windows connection was established with pfSense don't have their respective macs on the ARP table? Only their local networks seem to have send their mac to pfSense. In normal behavior both of them would have their mac addresses in the table and with more time to expire than Windows.**
+  **Here's the lead anomaly. Why did LAN 192.168.200.1/24 and Windows 192.168.200.40 both of them had their own mac addresses on the ARP table while Debian-DVWA and Ubuntu-Wazuh that were pinging each other after windows connection was established with pfSense don't have their respective macs on the ARP table? Only their local networks seem to have send their mac to pfSense. In normal behavior both of them would have their mac addresses in the table and with more time to expire than Windows.**
+
+- Using command apr -an on pfSense's shell to corroborate no discrepancies with what was shown on WebGui.
+  
+  (Utilizando el comando arp -an en la linea de comandos en pfSense para corroborar que no hay discrepancias con lo mostrado en la interfaz de la web)
+  
+  <img width="1030" height="192" alt="Screenshot_2026-07-24_10-54-32" src="https://github.com/user-attachments/assets/f3aedf84-0003-49f5-a614-d27ffffbd78f" />
+
 
 
 
