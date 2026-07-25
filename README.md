@@ -25,7 +25,7 @@ ____
 
 - The default restriction on Active Directory Domain Control -ADDC-, keeping standard accounts from log in, in order to mantain secure NTDS.dit database. Standard users can't log on via an interactive session on Domain Control, but must do it over the network via Kerberos/LDAP -Lightweight Directory Access Protocol-
 
-(Las restricciones predeterminadas del servidor ADDC mantienen fuera de acceso cuentas estándar para mantener segura la base de datos NTDS.dit. Los usuarios estándar no pueden accersar al servidor DC mediante sesión interactiva, deben hacerlo por mediante internet via Kerberos/LDAP.)
+  (Las restricciones predeterminadas del servidor ADDC mantienen fuera de acceso cuentas estándar para mantener segura la base de datos NTDS.dit. Los usuarios estándar no pueden accersar al servidor DC mediante sesión interactiva, deben hacerlo por mediante internet via Kerberos/LDAP.)
   
 <img width="80%" alt="Screenshot_2026-07-18_01-05-54" src="https://github.com/user-attachments/assets/7594d2dc-f614-42cc-8113-6138569561f8" />
 
@@ -35,11 +35,21 @@ ____
 
 - pfSense up and running
 
-<img width="978" height="373" alt="Screenshot_2026-07-24_10-43-54" src="https://github.com/user-attachments/assets/b390abef-18db-4107-bf47-ec4e3e5c9000" />
+<img width="80%" alt="Screenshot_2026-07-24_10-43-54" src="https://github.com/user-attachments/assets/b390abef-18db-4107-bf47-ec4e3e5c9000" />
 
-- Each network connected to pfSense firewall, WAN 10.10.0.1/24 Kali linux 10.10.0.10 as external threat, MGMT 172.16.1.1/24 Ubuntu-Wazuh 172.16.1.10 it's ports 1514 opened to collect event's data from agents and 1515 for authentication from DMZ 172.16.0.1/24 Debian DVWA 172.16.0.10 and from LAN 102.168.200.1/24 Windows 11 Enterprise 102.168.200.40 and ADDC MS Server 2025 102.168.200.10, and port 443 open, to use Windows 11 as SIEM Management Console, through pfSense firewall rules.
+- Each network connected to pfSense firewall, WAN 10.10.0.1/24 Kali linux 10.10.0.10 external threat, MGMT 172.16.1.1/24 Ubuntu-Wazuh 172.16.1.10, it's ports 1514 opened to collect event's data from agents and 1515 for authentication from DMZ 172.16.0.1/24 Debian DVWA 172.16.0.10 and from LAN 102.168.200.1/24 Windows 11 Enterprise 102.168.200.40 and ADDC MS Server 2025 102.168.200.10, and port 443 open to use Windows 11 as SIEM Management Console, ports opened through pfSense firewall rules.
 
-(Cada red conectada a pfSense firewall, WAN 10.10.0.1/24 Kali linux 10.10.0.10 como amenza externa, MGMT 172.16.1.1/24 Ubuntu-Wazuh 172.16.1.10 Con los puertos para colectar datos de eventos regristrados por agentes y 1515 para autenticación,)
+  (Cada red conectada a pfSense firewall, WAN 10.10.0.1/24 Kali linux 10.10.0.10 amenza externa, MGMT 172.16.1.1/24 Ubuntu-Wazuh 172.16.1.10 Con los puertos para colectar datos de eventos registrados por agentes y 1515 para autenticación,provenientes de DMZ 172.16.0.1/24 Debian DVWA 172.16.0.10, de DMZ 172.16.0.1/24 Debian DVWA 172.16.0.10 y de ADDC MS Server 2025 102.168.200.10, y el puerto 443 abierto para usar Windows 11 como consola de administración SIEM, puertos abiertos mediante reglas en el firewall.)
+
+LAN:
+
+<img width="80%" alt="Screenshot_2026-07-24_14-03-22" src="https://github.com/user-attachments/assets/b5f5b7b4-b900-486a-a95e-fb82ec459547" />
+
+WAN:
+
+<img width="1320" height="380" alt="Screenshot_2026-07-23_21-31-19" src="https://github.com/user-attachments/assets/adadd00e-d4c0-4eed-b9ae-9ab8fe13f3fc" />
+
+
 
 <img width="80%" alt="Screenshot_2026-07-23_22-47-34" src="https://github.com/user-attachments/assets/40858b96-750f-40d9-816d-b75d114af801" />
 
