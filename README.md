@@ -92,10 +92,26 @@ ____
   <img width="60%" alt="Screenshot_2026-07-24_22-46-00" src="https://github.com/user-attachments/assets/5e5f9cb9-5e35-4d53-83b2-37f5bf000693" />
 
 
-- After a reboot once again the connection between Devian and Ubuntu-Wazuh was being refused.
+- After a reboot once again at connection testing between Devian and Ubuntu-Wazuh this was refused. The next tests were using pfSense own diagnostic tools on the webgui.
+
+  (Despúes de reiniciar nuevamente al probar la conexion desde Debian a Ubuntu-Wazuh esta era rechazada. Las siguientes pruebas se hicieron utilizando las propias herramientas de diagnostico propias de pfSense desde su interfaz gráfica.)
+
+  MGMT PING --> DMZ
+
+  <img width="60%" alt="Screenshot_2026-07-23_17-45-19" src="https://github.com/user-attachments/assets/f136b3e3-00b4-40a8-817c-429fd3a38005" />
+
+  DMZ PING--> MGMT
+  
+  <img width="60%" alt="Screenshot_2026-07-23_17-59-18" src="https://github.com/user-attachments/assets/69958619-6b83-416d-be54-b439a7ba2e9c" />
+
+  On both ping test was succesful, both 0% packet lost.
+
+  (En ambas pruebas el ping fue exito, 0% de perdida de paquetes.)
 
 
 
+
+  *Evidence analisis and some 
 
 
 
