@@ -114,20 +114,24 @@ ____
 
   <img width="60%" alt="Screenshot_2026-07-24_10-47-04" src="https://github.com/user-attachments/assets/64becdfb-6c23-4b9c-bd10-af29001105eb" />
 
-  **Here's the lead anomaly. First, this would be normal behavior and will use LAN and Windos as examples, LAN 192.168.200.1 was assigned on pfSense as the default gateway for all devices connected to pfSense on LAN, every device on LAN with an IP address in 192.168.200.1/24 range and 192.168.200.1 as gateway will call to pfSense like as its router's gateway, pfSense assigned to this gateway 192.168.200.1 with the MAC address: 52:54:00:71:bb:23 and Windows 192.168.200.40 is correctly displaying it's NIC's MAC addres 52:54:00:e1:98:0f. both of them had their respective MAC addresses displayed on the ARP table.
+  **Here's the lead anomaly. First, this would be normal behavior (and will use LAN and Windos as examples), LAN 192.168.200.1 was assigned on pfSense as the default gateway for all devices connected to pfSense on LAN, every device on LAN with an IP address in 192.168.200.1/24 range and 192.168.200.1 as gateway will call to pfSense like as its router's gateway, pfSense assigned this gateway 192.168.200.1 with the MAC address: 52:54:00:71:bb:23 and Windows 192.168.200.40 is correctly displaying it's NIC's MAC addres 52:54:00:e1:98:0f. both of them had their respective MAC addresses displayed on the ARP table.
   Now the anomaly, Debian-DVWA and Ubuntu-Wazuh that were pinging each other (theorically) through prSense after windows connection was established with pfSense, don't have their respective NIC's MACs displayed on the ARP table, We can see DMZ's gateway MAC address 52:54:00:63:63:46, and MGMT's gateway MAC 52:54:00:90:dd:1f. Then why can't we see Debian-DVWA and Ubuntu-Wazuh NIC's MACs?**
 
-  **(Acá está la anomalía principal. Primero, este sería el comportamiento normal)**
+  **(Acá está la anomalía principal. Primero, este sería el comportamiento normal (y voy a utilizar LAN y a Windows como ejemplos), LAN 192.168.200.1 fue asignada en pfSense como el gateway predeterminado para los equipos conectados a pfSense a travez de LAN, cada equipo con una dirección IP en el rango 192.168.200.1/24 y que usen de gateway predeterminado 192.168.200.1 llamaran a mediante este acceso a pfSense como llamando al gateway de un router, pfSense le asignó a este gateway 192.168.200.1 la dirección MAC 52:54:00:71:bb:23, y Windows 192.168.200.40 muestra la direccion MAC de su NIC 52:54:00:e1:98:0f, ambos muestran sus respectivas MACs en la tabla ARP, podemos ver LA dirección MAC del gateway de DMZ 52:54:00:63:63:46 y la de MGMT 52:54:00:90:dd:1f. Entonces la pregunta es por qué no aparecen las direcciones MAC de Debian-DVWA y Ubuntu-Wazuh en la tabla ARP?)**
 
-- Using command apr -an on pfSense's shell to corroborate no discrepancies with what was shown on WebGui.
+- One last corroboration, Using command apr -an on pfSense's shell to be sure there's no discrepancies with what was shown on WebGui.
   
-  (Utilizando el comando arp -an en la linea de comandos en pfSense para corroborar que no hay discrepancias con lo mostrado en la interfaz de la web)
+  (Una última corroboración, utilizando el comando arp -an en la linea de comandos en pfSense para asegurarse que no hay discrepancias con lo mostrado en la interfaz de la web)
   
   <img width="60%" alt="Screenshot_2026-07-24_10-54-32" src="https://github.com/user-attachments/assets/f3aedf84-0003-49f5-a614-d27ffffbd78f" />
 
   No discrepancies.
 
+- Explanation on Normal behavior, DMZ is an isolated network, with only 2 devices in it, Debian-DVWA and the router (pfSense) the only possible connection inside this netwerk is between Debian-DVWA and the router, when Debian-DVWA sends a ARP request the only device listening to it and available to answer it's the router. Using the command ip neighbor will ask to all device listening for the MAC address of the device with this IPv4 address 172.16.0.1, only the device using that IP address will answer back his MAC address... This is it. Problem found.
 
+  (Explicación del comportamiento normal, DMZ es una red aislada, con solo 2 dispositivos, Debian-DVWA y un router (pfSense) la única conexión posible dentro de esta red es entre Debian-DVWA y el router, cuando Debian-DVWA envia un pedido ARP el unico equipo escuchando y con posibilidad de respondiendo es el router. Usando el comando ip neighbor se envia un pedido de respuesta de la MAC hacia todos los equipos escuchando para que el equipo que tiene asignada la dirección IPv4 responda de vuelta su dirección MAC... Y aquí está, problema encontrado.
+
+  <img width="60%" alt="Screenshot_2026-07-24_10-56-49" src="https://github.com/user-attachments/assets/8cbfbb73-0609-40cf-b92c-a6174f18752d" />
 
 
 
