@@ -54,6 +54,7 @@ DMZ:
   **(Probando la conexión entre MGMT y LAN y MGMT y DMZ)**
 
   Windwos to Wazuh ports 443, 1514 adn 1515 working properly.
+
   (De Windows a Wazuh los puertos 443, 1514 y 1515 funcionando apropiadamente)
  
 <img width="80%" alt="Screenshot_2026-07-23_22-47-34" src="https://github.com/user-attachments/assets/40858b96-750f-40d9-816d-b75d114af801" />
