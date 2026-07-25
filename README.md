@@ -50,6 +50,7 @@ DMZ:
 <img width="80%" alt="Screenshot_2026-07-23_21-31-19" src="https://github.com/user-attachments/assets/adadd00e-d4c0-4eed-b9ae-9ab8fe13f3fc" />
 
 - **Testing connection between MGMT and LAN and MGMT and DMZ**
+
   **(Probando la conexión entre MGMT y LAN y MGMT y DMZ)**
 
   Windwos to Wazuh ports 443, 1514 adn 1515 working properly.
