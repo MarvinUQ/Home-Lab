@@ -38,9 +38,9 @@ ____
 
   <img width="60%" alt="Screenshot_2026-07-24_10-43-54" src="https://github.com/user-attachments/assets/b390abef-18db-4107-bf47-ec4e3e5c9000" />
 
-- Each network connected to pfSense firewall, WAN 10.10.0.1/24 Kali linux 10.10.0.10 external threat, MGMT 172.16.1.1/24 Ubuntu-Wazuh 172.16.1.10, it's tcp port 1514 opened to collect event's data, logs and warnings from running agents from DMZ 172.16.0.1/24 Debian DVWA 172.16.0.10 and from LAN 192.168.200.1/24 Windows 11 Enterprise 192.168.200.40 and ADDC MS Server 2025 192.168.200.10, tcp port 1515 for agent's authentication and port 443 open to use Windows 11 as SIEM Management Console, ports opened through pfSense firewall rules.
+- Each network connected to pfSense firewall, WAN 10.10.0.1/24 Kali linux 10.10.0.10 external threat, MGMT 172.16.1.1/24 Ubuntu-Wazuh 172.16.1.10, it's tcp port 1514 opened to collect event's data, logs and warnings from running agents from DMZ 172.16.0.1/24 Debian-DVWA 172.16.0.10 and from LAN 192.168.200.1/24 Windows 11 Enterprise 192.168.200.40 and ADDC MS Server 2025 192.168.200.10, tcp port 1515 for agent's authentication and port 443 open to use Windows 11 as SIEM Management Console, ports opened through pfSense firewall rules.
 
-  (Cada red conectada a pfSense firewall, WAN 10.10.0.1/24 Kali linux 10.10.0.10 amenza externa, MGMT 172.16.1.1/24 Ubuntu-Wazuh 172.16.1.10 Con el puerto tcp 1514 para colectar datos de eventos registros y advertencias enviadas por agentes activos, provenientes de DMZ 172.16.0.1/24 Debian DVWA 172.16.0.10, y de LAN 192.168.200.1/24 Windows 11 Enterprise 192.168.200.40 y ADDC MS Server 2025 192.168.200.10, el puerto tcp 1515 para la autenticación de agentes, y el puerto 443 abierto para usar Windows 11 como consola de administración SIEM, puertos abiertos mediante reglas en pfSense firewall.)
+  (Cada red conectada a pfSense firewall, WAN 10.10.0.1/24 Kali linux 10.10.0.10 amenza externa, MGMT 172.16.1.1/24 Ubuntu-Wazuh 172.16.1.10 Con el puerto tcp 1514 para colectar datos de eventos registros y advertencias enviadas por agentes activos, provenientes de DMZ 172.16.0.1/24 Debian-DVWA 172.16.0.10, y de LAN 192.168.200.1/24 Windows 11 Enterprise 192.168.200.40 y ADDC MS Server 2025 192.168.200.10, el puerto tcp 1515 para la autenticación de agentes, y el puerto 443 abierto para usar Windows 11 como consola de administración SIEM, puertos abiertos mediante reglas en pfSense firewall.)
 
   LAN:
 
@@ -72,9 +72,9 @@ ____
 
   <img width="60%" alt="Screenshot_2026-07-23_19-16-07" src="https://github.com/user-attachments/assets/ec250bd5-df00-486f-85e4-a20af8289336" />
 
-- After looking out through pfSense firewall rules searching for configuration mistakes everything was clean, next step was checking that both Debian and Ubuntu's firewall were disable to rule out they were responsible for the connection bug.
+- After looking out through pfSense firewall rules searching for configuration mistakes everything was clean, next step was checking that both Debian-DVWA and Ubuntu-Wazuh's firewall were disable to rule out they were responsible for the connection bug.
 
-  (Despúes de revisar entre las reglas establecidas en pfSense firewall no se encontraron errores de configuración, el siguiente paso fue revisar que los firewall tanto de Debian como Ubuntu estuviesen inactivos para descartar que fuesen los causantes del error de conexión.)
+  (Despúes de revisar entre las reglas establecidas en pfSense firewall no se encontraron errores de configuración, el siguiente paso fue revisar que los firewall tanto de Debian-DVWA como Ubuntu-Wazuh estuviesen inactivos para descartar que fuesen los causantes del error de conexión.)
 
   <img width="60%" alt="Screenshot_2026-07-23_19-19-19" src="https://github.com/user-attachments/assets/155d0194-28f7-498e-a349-3d92c76c4614" />
 
@@ -92,9 +92,9 @@ ____
   <img width="60%" alt="Screenshot_2026-07-24_22-46-00" src="https://github.com/user-attachments/assets/5e5f9cb9-5e35-4d53-83b2-37f5bf000693" />
 
 
-- After a reboot once again at connection testing between Devian and Ubuntu-Wazuh this was refused. The next tests were using pfSense own diagnostic tools on the webgui.
+- After a reboot once again at connection testing between Devian-DVWA and Ubuntu-Wazuh this was refused. The next tests were using pfSense own diagnostic tools on the webgui.
 
-  (Despúes de reiniciar nuevamente al probar la conexion desde Debian a Ubuntu-Wazuh esta era rechazada. Las siguientes pruebas se hicieron utilizando las propias herramientas de diagnostico propias de pfSense desde su interfaz gráfica.)
+  (Despúes de reiniciar nuevamente al probar la conexion desde Debian-DVWA a Ubuntu-Wazuh esta era rechazada. Las siguientes pruebas se hicieron utilizando las propias herramientas de diagnostico propias de pfSense desde su interfaz gráfica.)
 
   MGMT PING --> DMZ
 
@@ -106,7 +106,16 @@ ____
 
   On both ping test was succesful, both 0% packet lost.
 
-  (En ambas pruebas el ping fue exito, 0% de perdida de paquetes.)
+  (En ambas pruebas el ping fue exitoso, 0% de perdida de paquetes.)
+
+  The next diagnostic tool was ARP table, looking for dicrepancys or anomalies.
+
+  (La siguiente herramienta de diagnóstico era ARP table, para buscar dicrepancias o anomalias)
+
+  <img width="60%" alt="Screenshot_2026-07-24_10-47-04" src="https://github.com/user-attachments/assets/64becdfb-6c23-4b9c-bd10-af29001105eb" />
+
+  **Here's the lead anomaly, Why did LAN 192.168.200.1/24 and Windows 192.168.200.40 both of them had their own mac addresses on the ARP table while Debian-DVWA and Ubuntu-Wazuh that were pinging each other after windows connection was established with pfSense don't have their respective macs on the ARP table? Only their local networks seem to have send their mac to pfSense. In normal behavior both of them would have their mac addresses in the table and with more time to expire than Windows.**
+
 
 
 
