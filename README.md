@@ -76,14 +76,15 @@ DMZ:
 
   (Despúes de revisar entre las reglas establecidas en pfSense firewall no se encontraron errores de configuración, el siguiente paso fue revisar que los firewall tanto de Debian como Ubuntu estuviesen inactivos para descartar que fuesen los causantes del error de conexión.)
 
-  Debian
-<img width="60%" alt="Screenshot_2026-07-23_19-07-27" src="https://github.com/user-attachments/assets/332f3127-0594-406c-b725-366a592590d0" />
+<img width="60%" alt="Screenshot_2026-07-23_19-19-19" src="https://github.com/user-attachments/assets/155d0194-28f7-498e-a349-3d92c76c4614" />
 
-  Ubuntu
+ - Ubuntu-Wazuh firewall disable, then running command ss -tulpn (socket statistics) to check the network and ports' status on Wazuh, all 3 ports listening.
+
+   (Firewall de Ubuntu-Wazuh deshabilitado, luego se corre el comando ss -tulpn (estadísticas del socket) para verificar el estado de la red y los puertos de Wazuh, los 3 puertos en funcionamiento.)
+   
 <img width="60%" alt="Screenshot_2026-07-22_18-49-34" src="https://github.com/user-attachments/assets/f0a677cc-2572-47b6-a7e6-532c3d80a303" />
 
-
-- apa
+- a
 
 
 
