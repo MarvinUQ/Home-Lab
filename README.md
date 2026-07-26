@@ -159,9 +159,9 @@ ____
   
   <img width="60%" alt="Screenshot_2026-07-24_11-05-51" src="https://github.com/user-attachments/assets/687febf6-1d38-48ec-9086-ab19ed1bf0f7" />
 
-- The choosen solution was the second option, this one covers in a better way the needs of the project, since having the networks in complete isolation from the Fedora avoids data contamination and registries on logs form unforeseen comunications between virtal machines and the host. 
+- The choosen solution was the second option, this one covers in a better way the needs of the project, since having the networks in complete isolation from the host avoids possible data contamination and information registered on logs from unforeseen comunications between virtal machines and the host. 
 
-  (La solución escogida fue la segunda opción, esta es la que se adapta mejor a las necesidades del proyecto, ya que el total aislamiento de las redes hacia Fedora evita contaminación de los datos e información que puede aparecer en registros por comunicacion imprevista entre las maquinas virtuales y el host)
+  (La solución escogida fue la segunda opción, esta es la que se adapta mejor a las necesidades del proyecto, ya que el total aislamiento de las redes hacia Fedora evita la posible contaminación en los datos e información que puede aparecer en registros por comunicacion imprevista entre las maquinas virtuales y el host)
 
 ### -A Note on AI Assistance. (Nota sobre la asistencia de IA.)
 
