@@ -133,6 +133,11 @@ ____
 
   <img width="60%" alt="Screenshot_2026-07-24_10-56-49" src="https://github.com/user-attachments/assets/8cbfbb73-0609-40cf-b92c-a6174f18752d" />
 
+- What's happening here? There's a conflict, the same IP address is being used as default gateway for the bridge between the virtual network and the host, in this case fedora, 
+  
+  <img width="60%" alt="Screenshot_2026-07-24_11-05-51" src="https://github.com/user-attachments/assets/687febf6-1d38-48ec-9086-ab19ed1bf0f7" />
+
+
 
 
 
