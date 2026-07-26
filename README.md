@@ -149,7 +149,6 @@ ____
   
   1. Change the default IP address on virt manager from 172.16.0.1/24 to an IP address different than 172.16.0.10/24 in the same range.
   
-  
   2, remove entire the IP address from bridging with the host, it's the mor sensible solution for the project since a total isolation provides less future problems and data will only flow were it should.
 
   
