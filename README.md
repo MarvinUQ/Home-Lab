@@ -145,11 +145,15 @@ ____
 
 - ***The solution (La solución)***
 
-  There are 2 solutions:
+  There are 2 solutions (both can be used on each network, DMZ or MGMT):
   
   1. Change the default virtbr3's gateway IP address on virt manager from 172.16.0.1/24 to an IP address different than 172.16.0.10/24 (since this is Debian-DVWA's IP addres) and that is not and won't be used by any other device connected to DMZ and that is in the same range.
   
-  2, remove entire the IP address from bridging with the host, it's the mor sensible solution for the project since a total isolation provides less future problems and data will only flow were it should.
+  2, remove completely the IP address from virbr3, it's the mor sensible solution for the project since a total isolation provides less future problems and data will only flow were it should.
+
+  (Hay 2 suluciones (ambas pueden aplicar a cada red, DMZ o MGMT):
+
+  1. Cambiar la dirección IP predeterminada del gateway del puente (virtbr) entre Fedora linux (host) y Debian-DVWA (la maquina virtual) en virt manager de 172.16.0.1/24 a otra IP dentro del mismo rango siempre y cuando se cumplan 2 condicines, la IP no puede ser la misma de Debian-DVWA 172.16.0.10 y que tampoco esa misma ip sea o que ya este asignada a otro equipo que se conecte a la red DMZ
 
   
   <img width="60%" alt="Screenshot_2026-07-24_11-05-51" src="https://github.com/user-attachments/assets/687febf6-1d38-48ec-9086-ab19ed1bf0f7" />
