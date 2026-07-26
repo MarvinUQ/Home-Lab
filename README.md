@@ -169,9 +169,26 @@ ____
 
 - To wrap up, with both networks completely isolated from Fedora it is necesary to grant Fedora access to Ubuntu-Wazuh for easy management and troubleshooting, this access it's granted by 2 methods:
 
-  1. At network level, using pfSense rules to connect Fedora by the bridge between it and LAN network ON 192.168.200.254, and opening comunications on port 22 for using ***SSH***, a fast, reliable and secure protocol.
+  1. At network level, using pfSense rules to connect Fedora by the bridge between it and LAN network ON 192.168.200.254, and opening comunications on port 22 for ***SSH***, a fast, reliable and secure protocol.
  
-  2. At (virtual) straigth connection similar to a serial cable connected directly between Fedora and Ubuntu-Wazuh via ***virsh console*** that is a part of the virt managers tools, this connection doesn't need the network working to connect Fedora to Ubuntu-Wazuh, this connection is well suited for troubleshooting and to repair the virtual machine even if it has boot problems.   
+  2. At (virtual) straigth connection similar to a serial cable connected directly between Fedora and Ubuntu-Wazuh via ***virsh console*** a tool of virt manager, this connection doesn't need the network working to connect Fedora to Ubuntu-Wazuh, this make it well suited for troubleshooting and to repair the virtual machine even if it has boot problems.
+
+  (Para cerrar, con ambas redes en completo aislamiento )
+
+
+  <img width="60%" alt="Screenshot_2026-07-24_13-07-13" src="https://github.com/user-attachments/assets/0ffdd532-6f36-49fe-ae4e-6bfa75b3fb9f" />
+
+  SSH enabled and working.
+
+- After enabling virsh console and running it the host's console only response to exit key combination (ctrl + ]), so this line ´´´console=tty0 console=ttyS0, 115200n8´´ must be added on Ubuntu-Wazuh's grub configuration file to tell the kernel to send the console output into 2 different consoles, being ´´´console=ttyS0´´´ the serial console that is connected to virsh console.
+
+  <img width="60%" alt="Screenshot_2026-07-24_13-11-52" src="https://github.com/user-attachments/assets/49208179-69b0-4102-9282-dc651a5f3ba7" />
+
+  <img width="60%" alt="Screenshot_2026-07-24_13-12-55" src="https://github.com/user-attachments/assets/1a2474b0-2bc9-400b-ad01-70521e6a7732" />
+
+- Virsh console properly working.
+
+  <img width="60%" alt="Screenshot_2026-07-24_13-15-51" src="https://github.com/user-attachments/assets/3a64d8c3-7d8e-4730-9c84-e418d8e98e48" />
 
 
 ### -A Note on AI Assistance. (Nota sobre la asistencia de IA.)
