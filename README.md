@@ -180,17 +180,30 @@ ____
 
   SSH enabled and working.
 
-- After enabling virsh console and running it the host's console only response to exit key combination (ctrl + ]), so this line ´´´console=tty0 console=ttyS0, 115200n8´´ must be added on Ubuntu-Wazuh's grub configuration file to tell the kernel to send the console output into 2 different consoles, being ´´´console=ttyS0´´´ the serial console that is connected to virsh console.
+  (SSH habilitado y funcionando)
+
+- After enabling virsh console and running it the host's console only response to exit key combination ´´´ctrl + ]´´´ so this line ´´´console=tty0 console=ttyS0, 115200n8´´´ must be added on Ubuntu-Wazuh's GRUB's configuration file to tell the kernel to send the console output into 2 different consoles, being ´´´console=ttyS0´´´ the serial console that is connected to virsh console.
+
+  (Despues de habilitar virsh console y ejecutarlo la consola del anfitrión respondia a la combinación de teclas para cerrar virsh console ´´´ctrl + ]´´´ así que esta linea ´´´console=tty0 console=ttyS0, 115200n8´´´ se debe agregar al achivo de configuración del GRUB de Ubuntu-Wazuh para indicar al kernel que debe enviar la salida de la consola a 2 consolas distintas al mismo tiempo, siendo ´´´console=ttyS0´´´ la consola del puerto de serie virtual que se conecta a virsh console.)
 
   <img width="60%" alt="Screenshot_2026-07-24_13-11-52" src="https://github.com/user-attachments/assets/49208179-69b0-4102-9282-dc651a5f3ba7" />
 
   <img width="60%" alt="Screenshot_2026-07-24_13-12-55" src="https://github.com/user-attachments/assets/1a2474b0-2bc9-400b-ad01-70521e6a7732" />
 
-- Virsh console properly working.
+  GRUB modified and updated.
+
+  (GRUB modificado y actualizado.)
+
+- Testing virsh console.
+
+  (Probando virsh console.)
 
   <img width="60%" alt="Screenshot_2026-07-24_13-15-51" src="https://github.com/user-attachments/assets/3a64d8c3-7d8e-4730-9c84-e418d8e98e48" />
 
+  Virsh console properly working.
 
+  (Virsh console funcionando apropiadamente.)
+  
 ### -A Note on AI Assistance. (Nota sobre la asistencia de IA.)
 
 Claude (Anthropic) and Gemini (Google) were used throughout this build as technical
