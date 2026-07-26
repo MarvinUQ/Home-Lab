@@ -143,11 +143,11 @@ ____
 
   <img width="60%" alt="Screenshot_2026-07-25_18-11-44" src="https://github.com/user-attachments/assets/6e286906-2f90-4f79-8cd6-50ff9f31d8c1" />
 
-= ***The solution (La olución)***
+- ***The solution (La solución)***
 
   There are 2 solutions:
   
-  1. Change the default IP address on virt manager from 172.16.0.1/24 to an IP address different than 172.16.0.10/24 in the same range.
+  1. Change the default virtbr3's gateway IP address on virt manager from 172.16.0.1/24 to an IP address different than 172.16.0.10/24 (since this is Debian-DVWA's IP addres) and that is not and won't be used by any other device connected to DMZ and that is in the same range.
   
   2, remove entire the IP address from bridging with the host, it's the mor sensible solution for the project since a total isolation provides less future problems and data will only flow were it should.
 
