@@ -40,11 +40,11 @@ ____
 
 - Four separate networks, each with a different trust level, all routed and filtered through one firewall.*
 
-  *WAN 10.10.0.1/24 Kali linux 10.10.0.10 external threat, MGMT 172.16.1.1/24 Ubuntu-Wazuh 172.16.1.10, it's tcp port 1514 opened to collect event's data, logs and warnings from running agents from DMZ 172.16.0.1/24 Debian-DVWA 172.16.0.10 and from LAN 192.168.200.1/24 Windows 11 Enterprise 192.168.200.40 and ADDC MS Server 2025 192.168.200.10, tcp port 1515 for agent's authentication and port 443 open to use Windows 11 as SIEM Management Console, ports opened through pfSense firewall rules
+  * WAN 10.10.0.1/24 Kali linux 10.10.0.10 external threat, MGMT 172.16.1.1/24 Ubuntu-Wazuh 172.16.1.10, it's tcp port 1514 opened to collect event's data, logs and warnings from running agents from DMZ 172.16.0.1/24 Debian-DVWA 172.16.0.10 and from LAN 192.168.200.1/24 Windows 11 Enterprise 192.168.200.40 and ADDC MS Server 2025 192.168.200.10, tcp port 1515 for agent's authentication and port 443 open to use Windows 11 as SIEM Management Console, ports opened through pfSense firewall rules
 
   (Cuatro redes separadas, cada una con distintos niveles de confianza, todas enrutadas y filtradas a travez de un firewall.*
 
-  *WAN 10.10.0.1/24 Kali linux 10.10.0.10 amenza externa, MGMT 172.16.1.1/24 Ubuntu-Wazuh 172.16.1.10 Con el puerto tcp 1514 para colectar datos de eventos registros y advertencias enviadas por agentes activos, provenientes de DMZ 172.16.0.1/24 Debian-DVWA 172.16.0.10, y de LAN 192.168.200.1/24 Windows 11 Enterprise 192.168.200.40 y ADDC MS Server 2025 192.168.200.10, el puerto tcp 1515 para la autenticación de agentes, y el puerto 443 abierto para usar Windows 11 como consola de administración SIEM, puertos abiertos mediante reglas en pfSense firewall.)
+  * WAN 10.10.0.1/24 Kali linux 10.10.0.10 amenza externa, MGMT 172.16.1.1/24 Ubuntu-Wazuh 172.16.1.10 Con el puerto tcp 1514 para colectar datos de eventos registros y advertencias enviadas por agentes activos, provenientes de DMZ 172.16.0.1/24 Debian-DVWA 172.16.0.10, y de LAN 192.168.200.1/24 Windows 11 Enterprise 192.168.200.40 y ADDC MS Server 2025 192.168.200.10, el puerto tcp 1515 para la autenticación de agentes, y el puerto 443 abierto para usar Windows 11 como consola de administración SIEM, puertos abiertos mediante reglas en pfSense firewall.)
 
   LAN:
 
@@ -131,15 +131,15 @@ ____
 
   No discrepancies.
 
-- Explanation on Normal behavior, DMZ is an isolated network, with only 2 devices in it, Debian-DVWA and the router (pfSense) the only possible connection inside this netwerk is between Debian-DVWA and the router, when Debian-DVWA sends a ARP request the only device listening to it and available to answer it's the router. Using the command ip neighbor will ask to all device listening for the MAC address of the device with this IPv4 address 172.16.0.1, only the device using that IP address will answer back his MAC address... This is it. Problem found.
+- Explanation on Normal behavior, DMZ is an isolated network, with only 2 devices in it, Debian-DVWA and the router (pfSense) the only possible connection inside this netwerk is between Debian-DVWA and the router, when Debian-DVWA sends a ARP request the only device listening to it and available to answer it's the router. Using the command ip neighbor will ask to all device listening for the MAC address of the device with this IPv4 address 172.16.0.1, only the device using that IP address will answer back his MAC address, one device answers and the MAC address of this device is: 52:54:00:fb:0a:b1 ... This is it. Problem found.
 
-  (Explicación del comportamiento normal, DMZ es una red aislada, con solo 2 dispositivos, Debian-DVWA y un router (pfSense) la única conexión posible dentro de esta red es entre Debian-DVWA y el router, cuando Debian-DVWA envia un pedido ARP el unico equipo escuchando y con posibilidad de respuesta es el router. Usando el comando ip neighbor se envia un pedido de respuesta de la MAC hacia todos los equipos escuchando para que el equipo que tiene asignada la dirección IPv4 responda de vuelta su dirección MAC... Y aquí está, problema encontrado.
+  (Explicación del comportamiento normal, DMZ es una red aislada, con solo 2 dispositivos, Debian-DVWA y un router (pfSense) la única conexión posible dentro de esta red es entre Debian-DVWA y el router, cuando Debian-DVWA envia un pedido ARP el unico equipo escuchando y con posibilidad de respuesta es el router. Usando el comando ip neighbor se envia un pedido de respuesta de la MAC hacia todos los equipos escuchando para que el equipo que tiene asignada la dirección IPv4 responda de vuelta su dirección MAC, un equipo responde y la dirección MAC de este equipo es: 52:54:00:fb:0a:b1 ... Y aquí está, problema encontrado.
 
   <img width="60%" alt="Screenshot_2026-07-24_10-56-49" src="https://github.com/user-attachments/assets/8cbfbb73-0609-40cf-b92c-a6174f18752d" />
 
-- What's happening here? There's a conflict, the same IP address is being used as default gateway for the bridge between the virtual network and the host, in this case Fedora as seen on *virbr3*, and the default gateway on pfSense.
+- What's happening here? There's a conflict, the same IP address is being used as default gateway for the bridge between the virtual network and the host, in this case Fedora linux as seen on *virbr3*, and the default gateway on pfSense.
 
-  ()
+  (Que está ocurriendo aquí? Existe un conflicto, la misma dirección IP está siendo utilizada como gateway predeterminado del puente entre la red virtual y el sistema operativo anfritión, en este caso Fedora linux, como se muestra en *virbr3*, la dirección MAC es )
 
   <img width="60%" alt="Screenshot_2026-07-25_18-11-44" src="https://github.com/user-attachments/assets/6e286906-2f90-4f79-8cd6-50ff9f31d8c1" />
 
