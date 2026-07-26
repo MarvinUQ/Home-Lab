@@ -155,9 +155,13 @@ ____
 
   1. Cambiar la dirección IP predeterminada del gateway del puente (virtbr) entre Fedora linux (host) y la maquina virtual en virt manager de (DMZ) 172.16.0.1/24 o (MGMT) 172.16.1.1/24 a otra IP dentro de los mismos rangos siempre y cuando se cumplan estas 2 condicines, la IP no puede ser la misma de (DMZ) Debian-DVWA 172.16.0.10 o de (MGMT) Ubuntu-Wazuh 172.16.1.10 y que tampoco esa sea o que vaya a ser la IP de otro equipo que se agregue a la red DMZ o MGMT.
 
-  2. Remover por completo la dirección IP del gatway del puente (virbr) dejando la red DMZ totalmente aislada de Fedora (host).)
+  2. Remover por completo la dirección IP del gatway del puente (virbr) dejando la red totalmente aislada de Fedora (host).)
   
   <img width="60%" alt="Screenshot_2026-07-24_11-05-51" src="https://github.com/user-attachments/assets/687febf6-1d38-48ec-9086-ab19ed1bf0f7" />
+
+- The choosen solution was the second option, this one covers in a better way the needs of the project, since having the networks in complete isolation from the Fedora avoids data contamination and registries on logs form unforeseen comunications between virtal machines and the host. 
+
+  (La solución escogida fue la segunda opción, esta es la que se adapta mejor a las necesidades del proyecto, ya que el total aislamiento de las redes hacia Fedora evita contaminación de los datos e información que puede aparecer en registros por comunicacion imprevista entre las maquinas virtuales y el host)
 
 ### -A Note on AI Assistance. (Nota sobre la asistencia de IA.)
 
