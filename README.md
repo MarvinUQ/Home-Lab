@@ -167,11 +167,11 @@ ____
 
   <img width="60%" alt="Screenshot_2026-07-26_11-53-29" src="https://github.com/user-attachments/assets/8711e549-2c41-4e4c-b682-9466f82f94d7" />
 
-- To wrap up, with both networks completely isolated from Fedora it is necesary to grant Fedora access to Ubuntu-Wazuh for easy management and troubleshooting, this access it's grant by 2 methods:
+- To wrap up, with both networks completely isolated from Fedora it is necesary to grant Fedora access to Ubuntu-Wazuh for easy management and troubleshooting, this access it's granted by 2 methods:
 
   1. At network level, using pfSense rules to connect Fedora by the bridge between it and LAN network ON 192.168.200.254, and opening comunications on port 22 for using ***SSH***, a fast, reliable and secure protocol.
  
-  2.  
+  2. At (virtual) straigth connection similar to a serial cable connected directly between Fedora and Ubuntu-Wazuh via ***virsh console*** that is a part of the virt managers tools, this connection doesn't need the network working to connect Fedora to Ubuntu-Wazuh, this connection is well suited for troubleshooting and to repair the virtual machine even if it has boot problems.   
 
 
 ### -A Note on AI Assistance. (Nota sobre la asistencia de IA.)
