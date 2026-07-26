@@ -169,11 +169,15 @@ ____
 
 - To wrap up, with both networks completely isolated from Fedora it is necesary to grant Fedora access to Ubuntu-Wazuh for easy management and troubleshooting, this access it's granted by 2 methods:
 
-  1. At network level, using pfSense rules to connect Fedora by the bridge between it and LAN network ON 192.168.200.254, and opening comunications on port 22 for ***SSH***, a fast, reliable and secure protocol.
+  1. At network level, using pfSense firewall rules to connect Fedora by the bridge between it and LAN network on 192.168.200.254, passing comunications on port tcp/22 for ***SSH***, a fast, reliable and secure comunication protocol.
  
   2. At (virtual) straigth connection similar to a serial cable connected directly between Fedora and Ubuntu-Wazuh via ***virsh console*** a tool of virt manager, this connection doesn't need the network working to connect Fedora to Ubuntu-Wazuh, this make it well suited for troubleshooting and to repair the virtual machine even if it has boot problems.
 
-  (Para cerrar, con ambas redes en completo aislamiento )
+  (Para cerrar, con ambas redes en completo aislamiento de Fedora es necesario garantizar a este acceso a Ubuntu-Wazuh para facilidad de administración y solución de problemas, este acceso es garantizado mediante 2 métodos:
+
+  1. A nivel de red, utilizando reglas de firewall en pfSense para conectar Fedora por medio del puente entre este y la red LAN en 192.168.200.254 dejando pasar comunicación por el puerto tcp/22 para ***SSH*** el cual es un protocolo de comunicación rapido, fiable y seguro.
+    
+  3. Por conexión directa (virtual) similar a un cable de serie que conecta directamente Fedora y Ubuntu-Wazuh por medio de ****virsh console** una herramienta parte de virt manager, esta conexión no necesita que la red se encuentre trabajando para conectar a Fedora con Ubuntu-Wazuh, esto le da la capacidad de poder ser usada para solucionar problemas en la maquina virtual incluso si son problemas de arranque.)
 
 
   <img width="60%" alt="Screenshot_2026-07-24_13-07-13" src="https://github.com/user-attachments/assets/0ffdd532-6f36-49fe-ae4e-6bfa75b3fb9f" />
