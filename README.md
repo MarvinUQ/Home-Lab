@@ -82,9 +82,9 @@ ____
 
   <img width="60%" alt="Screenshot_2026-07-23_19-19-19" src="https://github.com/user-attachments/assets/155d0194-28f7-498e-a349-3d92c76c4614" />
 
- - Ubuntu-Wazuh firewall disable, then running command ss -tulpn (socket statistics) to check the network and ports' status on Wazuh, all 3 ports listening.
+ - Ubuntu-Wazuh firewall disable, then running command ```ss -tulpn``` (socket statistics) to check the network and ports' status on Wazuh, all 3 ports listening.
 
-   (Firewall de Ubuntu-Wazuh deshabilitado, luego se corre el comando ss -tulpn (estadísticas del socket) para verificar el estado de la red y los puertos de Wazuh, los 3 puertos en funcionamiento.)
+   (Firewall de Ubuntu-Wazuh deshabilitado, luego se corre el comando ```ss -tulpn``` (estadísticas del socket) para verificar el estado de la red y los puertos de Wazuh, los 3 puertos en funcionamiento.)
 
    <img width="60%" alt="Screenshot_2026-07-22_18-49-34" src="https://github.com/user-attachments/assets/f0a677cc-2572-47b6-a7e6-532c3d80a303" />
 
@@ -123,23 +123,23 @@ ____
 
   **(Acá está la anomalía principal. Primero, este sería el comportamiento normal (y voy a utilizar LAN y a Windows como ejemplos), LAN 192.168.200.1 fue asignada en pfSense como el gateway predeterminado para los equipos conectados a pfSense a travez de LAN, cada equipo con una dirección IP en el rango 192.168.200.1/24 y que usen de gateway predeterminado 192.168.200.1 llamaran a mediante este acceso a pfSense como llamando al gateway de un router, pfSense le asignó a este gateway 192.168.200.1 la dirección MAC 52:54:00:71:bb:23, y Windows 192.168.200.40 muestra la direccion MAC de su NIC 52:54:00:e1:98:0f, ambos muestran sus respectivas MACs en la tabla ARP, podemos ver LA dirección MAC del gateway de DMZ 52:54:00:63:63:46 y la de MGMT 52:54:00:90:dd:1f. Entonces la pregunta es por qué no aparecen las direcciones MAC de Debian-DVWA y Ubuntu-Wazuh en la tabla ARP?)**
 
-- One last corroboration, Using command apr -an on pfSense's shell to be sure there's no discrepancies with what was shown on WebGui.
+- One last corroboration, Using command ```apr -an``` on pfSense's shell to be sure there's no discrepancies with what was shown on WebGui.
   
-  (Una última corroboración, utilizando el comando arp -an en la linea de comandos en pfSense para asegurarse que no hay discrepancias con lo mostrado en la interfaz de la web)
+  (Una última corroboración, utilizando el comando ```arp -an``` en la linea de comandos en pfSense para asegurarse que no hay discrepancias con lo mostrado en la interfaz de la web)
   
   <img width="60%" alt="Screenshot_2026-07-24_10-54-32" src="https://github.com/user-attachments/assets/f3aedf84-0003-49f5-a614-d27ffffbd78f" />
 
   No discrepancies.
 
-- Explanation on Normal behavior, DMZ is an isolated network, with only 2 devices in it, Debian-DVWA and the router (pfSense) the only possible connection inside this netwerk is between Debian-DVWA and the router, when Debian-DVWA sends a ARP request the only device listening to it and available to answer it's the router. Using the command ip neighbor will ask to all device listening for the MAC address of the device with this IPv4 address 172.16.0.1, only the device using that IP address will answer back his MAC address, one device answers and the MAC address of this device is: 52:54:00:fb:0a:b1 ... This is it. Problem found.
+- Explanation on Normal behavior, DMZ is an isolated network, with only 2 devices in it, Debian-DVWA and the router (pfSense) the only possible connection inside this netwerk is between Debian-DVWA and the router, when Debian-DVWA sends a ARP request the only device listening to it and available to answer it's the router. Using the command ```ip neighbor``` will ask to all device listening for the MAC address of the device with this IPv4 address 172.16.0.1, only the device using that IP address will answer back his MAC address, one device answers and the MAC address of this device is: 52:54:00:fb:0a:b1 ... This is it. Problem found.
 
-  (Explicación del comportamiento normal, DMZ es una red aislada, con solo 2 dispositivos, Debian-DVWA y un router (pfSense) la única conexión posible dentro de esta red es entre Debian-DVWA y el router, cuando Debian-DVWA envia un pedido ARP el unico equipo escuchando y con posibilidad de respuesta es el router. Usando el comando ip neighbor se envia un pedido de respuesta de la MAC hacia todos los equipos escuchando para que el equipo que tiene asignada la dirección IPv4 responda de vuelta su dirección MAC, un equipo responde y la dirección MAC de este equipo es: 52:54:00:fb:0a:b1 ... Y aquí está, problema encontrado.
+  (Explicación del comportamiento normal, DMZ es una red aislada, con solo 2 dispositivos, Debian-DVWA y un router (pfSense) la única conexión posible dentro de esta red es entre Debian-DVWA y el router, cuando Debian-DVWA envia un pedido ARP el unico equipo escuchando y con posibilidad de respuesta es el router. Usando el comando ```ip neighbor``` se envia un pedido de respuesta de la MAC hacia todos los equipos escuchando para que el equipo que tiene asignada la dirección IPv4 responda de vuelta su dirección MAC, un equipo responde y la dirección MAC de este equipo es: 52:54:00:fb:0a:b1 ... Y aquí está, problema encontrado.
 
   <img width="60%" alt="Screenshot_2026-07-24_10-56-49" src="https://github.com/user-attachments/assets/8cbfbb73-0609-40cf-b92c-a6174f18752d" />
 
-- What's happening here? There's a conflict, the same IP address is being used as default gateway for the bridge between the virtual network and the host, in this case Fedora linux as seen on *virbr3*, and the default gateway on pfSense.
+- What's happening here? There's a conflict, the same IP address is being used as default gateway for the bridge between the virtual network and the host, in this case Fedora linux as seen on *virbr3*, the MAC address answering the MAC request is the bridge MAC: 52:54:00:fb:0a:b1, the default gateway on pfSense should the one answering back the MAC request: 52:54:00:63:63:46.
 
-  (Que está ocurriendo aquí? Existe un conflicto, la misma dirección IP está siendo utilizada como gateway predeterminado del puente entre la red virtual y el sistema operativo anfritión, en este caso Fedora linux, como se muestra en *virbr3*, la dirección MAC es )
+  (Que está ocurriendo aquí? Existe un conflicto, la misma dirección IP está siendo utilizada como gateway predeterminado del puente entre la red virtual y el sistema operativo anfritión, en este caso Fedora linux, como se muestra en *virbr3*, la dirección MAC respondiendo el pedido de MAC es la MAC del puente: 52:54:00:fb:0a:b1, el gateway predeterminado de pfSense deberia ser el único que responde de vuelta el pedido de MAC: 52:54:00:63:63:46.)
 
   <img width="60%" alt="Screenshot_2026-07-25_18-11-44" src="https://github.com/user-attachments/assets/6e286906-2f90-4f79-8cd6-50ff9f31d8c1" />
 
