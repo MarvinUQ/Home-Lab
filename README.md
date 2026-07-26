@@ -145,12 +145,25 @@ ____
   
   <img width="60%" alt="Screenshot_2026-07-24_11-05-51" src="https://github.com/user-attachments/assets/687febf6-1d38-48ec-9086-ab19ed1bf0f7" />
 
+### -A Note on AI Assistance. (Nota sobre la asistencia de IA.)
 
+Claude (Anthropic) and Gemini (Google) were used throughout this build as technical
+thinking partners — explaining networking and security concepts as they came up,
+suggesting hypotheses to test when something broke, and helping generate the
+diagrams and structure this writeup. Every command, every test, and every
+configuration change was run and verified by hand. The root-cause diagnosis of the
+ARP conflict above — cross-referencing pfSense's and Debian's ARP tables against the
+libvirt network configs to find the duplicate Layer 2 responder — was independent
+work.
 
-
-
-  *Evidence analisis and some 
-
+(Claude (Anthropic) y Gemini (Google) se usaron a lo largo de este proyecto como
+compañeros de pensamiento técnico — explicando conceptos de redes y seguridad a
+medida que surgían, sugiriendo hipótesis para probar cuando algo fallaba, y
+ayudando a generar los diagramas y estructurar este documento. Cada comando, cada
+prueba y cada cambio de configuración fue ejecutado y verificado a mano. El
+diagnóstico de la causa raíz del conflicto ARP arriba — comparando las tablas ARP
+de pfSense y Debian con las configuraciones de red de libvirt para encontrar el
+respondedor duplicado de Capa 2 — fue trabajo independiente.)
 
 
 
