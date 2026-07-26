@@ -133,13 +133,14 @@ ____
 
   <img width="60%" alt="Screenshot_2026-07-24_10-56-49" src="https://github.com/user-attachments/assets/8cbfbb73-0609-40cf-b92c-a6174f18752d" />
 
-- What's happening here? There's a conflict, the same IP address is being used as default gateway for the bridge between the virtual network and the host, in this case fedora as seen on virtbr3, and as default gateway on pfSense.
+- What's happening here? There's a conflict, the same IP address is being used as default gateway for the bridge between the virtual network and the host, in this case Fedora as seen on *virbr3*, and the default gateway on pfSense.
 
   ()
 
   <img width="60%" alt="Screenshot_2026-07-25_18-11-44" src="https://github.com/user-attachments/assets/6e286906-2f90-4f79-8cd6-50ff9f31d8c1" />
 
-= The solution, there are 2 solutions, 1 change the default ip on virt manager from
+= The solution, there are 2 solutions, 1 change the default IP address on virt manager from 172.16.0.1/24 to an IP address different than 172.16.0.10/24 in the same range.
+  Solution 2, remove entire the IP address from bridging with the host, it's the mor sensible solution for the project since a total isolation provides less future problems and data will only flow were it should.
 
   
   <img width="60%" alt="Screenshot_2026-07-24_11-05-51" src="https://github.com/user-attachments/assets/687febf6-1d38-48ec-9086-ab19ed1bf0f7" />
