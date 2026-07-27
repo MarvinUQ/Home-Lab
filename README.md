@@ -40,11 +40,11 @@ ____
 
 - Four separate networks, each with a different trust level, all routed and filtered through one firewall.*
 
-  * WAN 10.10.0.1/24 Kali linux 10.10.0.10 external threat, MGMT 172.16.1.1/24 Ubuntu-Wazuh 172.16.1.10, it's tcp port 1514 opened to collect event's data, logs and warnings from running agents from DMZ 172.16.0.1/24 Debian-DVWA 172.16.0.10 and from LAN 192.168.200.1/24 Windows 11 Enterprise 192.168.200.40 and ADDC MS Server 2025 192.168.200.10, tcp port 1515 for agent's authentication and port 443 open to use Windows 11 as SIEM Management Console, ports opened through pfSense firewall rules
+  * WAN 10.10.0.1/24 Kali Linux 10.10.0.10 external threat, MGMT 172.16.1.1/24 Ubuntu-Wazuh 172.16.1.10, its TCP port 1514 opened to collect event's data, logs and warnings from running agents from DMZ 172.16.0.1/24 Debian-DVWA 172.16.0.10 and from LAN 192.168.200.1/24 Windows 11 Enterprise 192.168.200.40 and ADDC MS Server 2025 192.168.200.10, TCP port 1515 for agent's authentication and port 443 open to use Windows 11 as SIEM Management Console, ports opened through pfSense firewall rules
 
   (Cuatro redes separadas, cada una con distintos niveles de confianza, todas enrutadas y filtradas a travez de un firewall.*
 
-  * WAN 10.10.0.1/24 Kali linux 10.10.0.10 amenza externa, MGMT 172.16.1.1/24 Ubuntu-Wazuh 172.16.1.10 Con el puerto tcp 1514 para colectar datos de eventos registros y advertencias enviadas por agentes activos, provenientes de DMZ 172.16.0.1/24 Debian-DVWA 172.16.0.10, y de LAN 192.168.200.1/24 Windows 11 Enterprise 192.168.200.40 y ADDC MS Server 2025 192.168.200.10, el puerto tcp 1515 para la autenticación de agentes, y el puerto 443 abierto para usar Windows 11 como consola de administración SIEM, puertos abiertos mediante reglas en pfSense firewall.)
+  * WAN 10.10.0.1/24 Kali Linux 10.10.0.10 amenza externa, MGMT 172.16.1.1/24 Ubuntu-Wazuh 172.16.1.10 Con el puerto TCP 1514 para colectar datos de eventos registros y advertencias enviadas por agentes activos, provenientes de DMZ 172.16.0.1/24 Debian-DVWA 172.16.0.10, y de LAN 192.168.200.1/24 Windows 11 Enterprise 192.168.200.40 y ADDC MS Server 2025 192.168.200.10, el puerto TCP 1515 para la autenticación de agentes, y el puerto 443 abierto para usar Windows 11 como consola de administración SIEM, puertos abiertos mediante reglas en pfSense firewall.)
 
   LAN:
 
@@ -96,7 +96,7 @@ ____
   <img width="60%" alt="Screenshot_2026-07-24_22-46-00" src="https://github.com/user-attachments/assets/5e5f9cb9-5e35-4d53-83b2-37f5bf000693" />
 
 
-- After a reboot once again at connection testing between Devian-DVWA and Ubuntu-Wazuh this was refused. The next tests were using pfSense own diagnostic tools on the webgui.
+- After a reboot once again at connection testing between Debian-DVWA and Ubuntu-Wazuh this was refused. The next tests were using pfSense own diagnostic tools on the webgui.
 
   (Despúes de reiniciar nuevamente al probar la conexion desde Debian-DVWA a Ubuntu-Wazuh esta era rechazada. Las siguientes pruebas se hicieron utilizando las propias herramientas de diagnostico propias de pfSense desde su interfaz gráfica.)
 
@@ -118,12 +118,12 @@ ____
 
   <img width="60%" alt="Screenshot_2026-07-24_10-47-04" src="https://github.com/user-attachments/assets/64becdfb-6c23-4b9c-bd10-af29001105eb" />
 
-  **Here's the lead anomaly. First, this would be normal behavior (and will use LAN and Windos as examples), LAN 192.168.200.1 was assigned on pfSense as the default gateway for all devices connected to pfSense on LAN, every device on LAN with an IP address in 192.168.200.1/24 range and 192.168.200.1 as gateway will call to pfSense like as its router's gateway, pfSense assigned this gateway 192.168.200.1 with the MAC address: 52:54:00:71:bb:23 and Windows 192.168.200.40 is correctly displaying it's NIC's MAC addres 52:54:00:e1:98:0f. both of them had their respective MAC addresses displayed on the ARP table.
+  **Here's the lead anomaly. First, this would be normal behavior (and will use LAN and Windos as examples), LAN 192.168.200.1 was assigned on pfSense as the default gateway for all devices connected to pfSense on LAN, every device on LAN with an IP address in 192.168.200.1/24 range and 192.168.200.1 as gateway will call to pfSense like as its router's gateway, pfSense assigned this gateway 192.168.200.1 with the MAC address: 52:54:00:71:bb:23 and Windows 192.168.200.40 is correctly displaying its NIC's MAC addres 52:54:00:e1:98:0f. both of them had their respective MAC addresses displayed on the ARP table.
   Now the anomaly, Debian-DVWA and Ubuntu-Wazuh that were pinging each other (theorically) through prSense after windows connection was established with pfSense, don't have their respective NIC's MACs displayed on the ARP table, We can see DMZ's gateway MAC address 52:54:00:63:63:46, and MGMT's gateway MAC 52:54:00:90:dd:1f. Then why can't we see Debian-DVWA and Ubuntu-Wazuh NIC's MACs?**
 
   **(Acá está la anomalía principal. Primero, este sería el comportamiento normal (y voy a utilizar LAN y a Windows como ejemplos), LAN 192.168.200.1 fue asignada en pfSense como la puerta de enlace predeterminada para los equipos conectados a pfSense a travez de LAN, cada equipo con una dirección IP en el rango 192.168.200.1/24 y que usen de puerta de enlace predeterminada 192.168.200.1 utilizarán este acceso a pfSense ya que este se comporta comu un router, pfSense le asignó a esta puerta de enlace predeterminada 192.168.200.1 a la dirección MAC 52:54:00:71:bb:23, y Windows 192.168.200.40 muestra la direccion MAC de su NIC 52:54:00:e1:98:0f, ambos muestran sus respectivas MACs en la tabla ARP, podemos ver LA dirección MAC de la puerta de enlace predeterminada de DMZ 52:54:00:63:63:46 y la de MGMT 52:54:00:90:dd:1f. Entonces la pregunta es por qué no aparecen las direcciones MAC de Debian-DVWA y Ubuntu-Wazuh en la tabla ARP?)**
 
-- One last corroboration, Using command ```apr -an``` on pfSense's shell to be sure there's no discrepancies with what was shown on WebGui.
+- One last corroboration, Using command ```arp -an``` on pfSense's shell to be sure there's no discrepancies with what was shown on WebGui.
   
   (Una última corroboración, utilizando el comando ```arp -an``` en la linea de comandos en pfSense para asegurarse que no hay discrepancias con lo mostrado en la interfaz de la web)
   
@@ -131,15 +131,15 @@ ____
 
   No discrepancies.
 
-- Explanation on Normal behavior, DMZ is an isolated network, with only 2 devices in it, Debian-DVWA and the router (pfSense) the only possible connection inside this netwerk is between Debian-DVWA and the router, when Debian-DVWA sends a ARP request the only device listening to it and available to answer it's the router. Using the command ```ip neighbor``` a request is send to all device listening for the device with the IPv4 address 172.16.0.1 to answer back his MAC address, one device answers and the MAC address of this device is: 52:54:00:fb:0a:b1 ... This is it. Problem found.
+- Explanation on Normal behavior, DMZ is an isolated network, with only 2 devices in it, Debian-DVWA and the router (pfSense) the only possible connection inside this netwerk is between Debian-DVWA and the router, when Debian-DVWA sends a ARP request the only device listening to it and available to answer its the router. Using the command ```ip neighbor``` a request is send to all device listening for the device with the IPv4 address 172.16.0.1 to answer back his MAC address, one device answers and the MAC address of this device is: 52:54:00:fb:0a:b1 ... This is it. Problem found.
 
   (Explicación del comportamiento normal, DMZ es una red aislada, con solo 2 dispositivos, Debian-DVWA y un router (pfSense) la única conexión posible dentro de esta red es entre Debian-DVWA y el router, cuando Debian-DVWA envia un pedido ARP el unico equipo escuchando y con posibilidad de respuesta es el router. Usando el comando ```ip neighbor``` se envia un pedido de respuesta de la MAC hacia todos los equipos escuchando para que el equipo que tiene asignada la dirección IPv4 172.16.0.1 responda de vuelta su dirección MAC, un equipo responde y la dirección MAC de este equipo es: 52:54:00:fb:0a:b1 ... Y aquí está, problema encontrado.
 
   <img width="60%" alt="Screenshot_2026-07-24_10-56-49" src="https://github.com/user-attachments/assets/8cbfbb73-0609-40cf-b92c-a6174f18752d" />
 
-- What's happening here? There's a conflict, the same IP address is being used as default gateway for the bridge between the virtual network and the host, in this case Fedora linux as seen on *virbr3*, the MAC address answering the MAC request is the bridge MAC: 52:54:00:fb:0a:b1, the default gateway on pfSense should the one answering back the MAC request: 52:54:00:63:63:46.
+- What's happening here? There's a conflict, the same IP address is being used as default gateway for the bridge between the virtual network and the host, in this case Fedora Linux as seen on *virbr3*, the MAC address answering the MAC request is the bridge MAC: 52:54:00:fb:0a:b1, the default gateway on pfSense should the one answering back the MAC request: 52:54:00:63:63:46.
 
-  (Que está ocurriendo aquí? Existe un conflicto, la misma dirección IP está siendo utilizada como puerta de enlace predeterminada del puente entre la red virtual y el sistema operativo anfritión, en este caso Fedora linux, como se muestra en *virbr3*, la dirección MAC respondiendo el pedido de MAC es la MAC del puente: 52:54:00:fb:0a:b1, la puerta de enlace predeterminada de pfSense deberia ser el único que responde de vuelta el pedido de MAC: 52:54:00:63:63:46.)
+  (Que está ocurriendo aquí? Existe un conflicto, la misma dirección IP está siendo utilizada como puerta de enlace predeterminada del puente entre la red virtual y el sistema operativo anfritión, en este caso Fedora Linux, como se muestra en *virbr3*, la dirección MAC respondiendo el pedido de MAC es la MAC del puente: 52:54:00:fb:0a:b1, la puerta de enlace predeterminada de pfSense deberia ser el único que responde de vuelta el pedido de MAC: 52:54:00:63:63:46.)
 
   <img width="60%" alt="Screenshot_2026-07-25_18-11-44" src="https://github.com/user-attachments/assets/6e286906-2f90-4f79-8cd6-50ff9f31d8c1" />
 
@@ -147,13 +147,13 @@ ____
 
   There are 2 solutions (both can be used on each network, DMZ or MGMT):
   
-  1. Change the IP address of the virtual bridge (virtbr) between Fedora linux (host) and the virtual machine on virt manager from (DMZ) 172.16.0.1/24 and (MGMT) 172.16.1.1/24 to a different IP address in those ranges as long this 2 conditions are met, the IP can't be same as the virtual machine's on (DMZ) Debian-DVWA's 172.16.0.10 or on (MGMT) Ubuntu-Wazuh's 172.16.1.10, and that is not and won't be an IP used by any other device added to DMZ or MGMT networks.
+  1. Change the IP address of the virtual bridge (virbr) between Fedora Linux (host) and the virtual machine on virt-manager from (DMZ) 172.16.0.1/24 and (MGMT) 172.16.1.1/24 to a different IP address in those ranges as long this 2 conditions are met, the IP can't be same as the virtual machine's on (DMZ) Debian-DVWA's 172.16.0.10 or on (MGMT) Ubuntu-Wazuh's 172.16.1.10, and that is not and won't be an IP used by any other device added to DMZ or MGMT networks.
   
   2. Remove completely the IP address from bridge's (virbr) gateway, leavin the network totally isolated from Fedora (host).
 
   (Hay 2 suluciones (ambas pueden aplicar a cada red, DMZ o MGMT):
 
-  1. Cambiar la dirección IP de la puerta de enlace predeterminada del puente (virtbr) entre Fedora linux (anfitrión) y la maquina virtual en virt manager de (DMZ) 172.16.0.1/24 o (MGMT) 172.16.1.1/24 a otra IP dentro de los mismos rangos siempre y cuando se cumplan estas 2 condicines, la IP no puede ser la misma de (DMZ) Debian-DVWA 172.16.0.10 o de (MGMT) Ubuntu-Wazuh 172.16.1.10 y que tampoco esa sea o que vaya a ser la IP de otro equipo que se agregue a la red DMZ o MGMT.
+  1. Cambiar la dirección IP de la puerta de enlace predeterminada del puente (virbr) entre Fedora Linux (anfitrión) y la maquina virtual en virt-manager de (DMZ) 172.16.0.1/24 o (MGMT) 172.16.1.1/24 a otra IP dentro de los mismos rangos siempre y cuando se cumplan estas 2 condicines, la IP no puede ser la misma de (DMZ) Debian-DVWA 172.16.0.10 o de (MGMT) Ubuntu-Wazuh 172.16.1.10 y que tampoco esa sea o que vaya a ser la IP de otro equipo que se agregue a la red DMZ o MGMT.
 
   2. Remover por completo la dirección IP de la puerta de enlace predeterminada del puente (virbr) dejando la red totalmente aislada de Fedora (host).)
   
@@ -167,17 +167,17 @@ ____
 
   <img width="60%" alt="Screenshot_2026-07-26_11-53-29" src="https://github.com/user-attachments/assets/8711e549-2c41-4e4c-b682-9466f82f94d7" />
 
-- To wrap up, with both networks completely isolated from Fedora it is necesary to grant Fedora access to Ubuntu-Wazuh for easy management and troubleshooting, this access it's granted by 2 methods:
+- To wrap up, with both networks completely isolated from Fedora it is necesary to grant Fedora access to Ubuntu-Wazuh for easy management and troubleshooting, this access it is granted by 2 methods:
 
-  1. At network level, using pfSense firewall rules to connect Fedora by the bridge between it and LAN network on 192.168.200.254, passing comunications on port tcp/22 for ***SSH***, a fast, reliable and secure comunication protocol.
+  1. At network level, using pfSense firewall rules to connect Fedora by the bridge between it and LAN network on 192.168.200.254, passing comunications on port TCP/22 for ***SSH***, a fast, reliable and secure comunication protocol.
  
-  2. At (virtual) straigth connection similar to a serial cable connected directly between Fedora and Ubuntu-Wazuh via ***virsh console*** a tool of virt manager, this connection doesn't need the network working to connect Fedora to Ubuntu-Wazuh, this make it well suited for troubleshooting and to repair the virtual machine even if it has boot problems.
+  2. At (virtual) straigth connection similar to a serial cable connected directly between Fedora and Ubuntu-Wazuh via ***virsh console*** a tool of virt-manager, this connection doesn't need the network working to connect Fedora to Ubuntu-Wazuh, this make it well suited for troubleshooting and to repair the virtual machine even if it has boot problems.
 
   (Para cerrar, con ambas redes en completo aislamiento de Fedora es necesario garantizar a este acceso a Ubuntu-Wazuh para facilidad de administración y solución de problemas, este acceso es garantizado mediante 2 métodos:
 
-  1. A nivel de red, utilizando reglas de firewall en pfSense para conectar Fedora por medio del puente entre este y la red LAN en 192.168.200.254 dejando pasar comunicación por el puerto tcp/22 para ***SSH*** el cual es un protocolo de comunicación rapido, fiable y seguro.
+  1. A nivel de red, utilizando reglas de firewall en pfSense para conectar Fedora por medio del puente entre este y la red LAN en 192.168.200.254 dejando pasar comunicación por el puerto TCP/22 para ***SSH*** el cual es un protocolo de comunicación rapido, fiable y seguro.
     
-  3. Por conexión directa (virtual) similar a un cable de serie que conecta directamente Fedora y Ubuntu-Wazuh por medio de ****virsh console** una herramienta parte de virt manager, esta conexión no necesita que la red se encuentre trabajando para conectar a Fedora con Ubuntu-Wazuh, esto le da la capacidad de poder ser usada para solucionar problemas en la maquina virtual incluso si son problemas de arranque.)
+  2. Por conexión directa (virtual) similar a un cable de serie que conecta directamente Fedora y Ubuntu-Wazuh por medio de ***virsh console*** una herramienta parte de virt-manager, esta conexión no necesita que la red se encuentre trabajando para conectar a Fedora con Ubuntu-Wazuh, esto le da la capacidad de poder ser usada para solucionar problemas en la maquina virtual incluso si son problemas de arranque.)
 
 
   <img width="60%" alt="Screenshot_2026-07-24_13-07-13" src="https://github.com/user-attachments/assets/0ffdd532-6f36-49fe-ae4e-6bfa75b3fb9f" />
@@ -186,9 +186,9 @@ ____
 
   (SSH habilitado y funcionando)
 
-- After enabling virsh console and running it the host's console only response to exit key combination ´´´ctrl + ]´´´ so this line ´´´console=tty0 console=ttyS0, 115200n8´´´ must be added on Ubuntu-Wazuh's GRUB's configuration file to tell the kernel to send the console output into 2 different consoles, being ´´´console=ttyS0´´´ the serial console that is connected to virsh console.
+- After enabling virsh console and running it the host's console only response to exit key combination ```ctrl + ]``` so this line ```console=tty0 console=ttyS0, 115200n8``` must be added on Ubuntu-Wazuh's GRUB's configuration file to tell the kernel to send the console output into 2 different consoles, being ```console=ttyS0``` the serial console that is connected to virsh console.
 
-  (Despues de habilitar virsh console y ejecutarlo la consola del anfitrión respondia a la combinación de teclas para cerrar virsh console ´´´ctrl + ]´´´ así que esta linea ´´´console=tty0 console=ttyS0, 115200n8´´´ se debe agregar al achivo de configuración del GRUB de Ubuntu-Wazuh para indicar al kernel que debe enviar la salida de la consola a 2 consolas distintas al mismo tiempo, siendo ´´´console=ttyS0´´´ la consola del puerto de serie virtual que se conecta a virsh console.)
+  (Despues de habilitar virsh console y ejecutarlo la consola del anfitrión respondia a la combinación de teclas para cerrar virsh console ```ctrl + ]``` así que esta linea ```console=tty0 console=ttyS0, 115200n8``` se debe agregar al achivo de configuración del GRUB de Ubuntu-Wazuh para indicar al kernel que debe enviar la salida de la consola a 2 consolas distintas al mismo tiempo, siendo ```console=ttyS0``` la consola del puerto de serie virtual que se conecta a virsh console.)
 
   <img width="60%" alt="Screenshot_2026-07-24_13-11-52" src="https://github.com/user-attachments/assets/49208179-69b0-4102-9282-dc651a5f3ba7" />
 
