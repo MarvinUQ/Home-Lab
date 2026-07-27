@@ -24,7 +24,7 @@ This are some of the concepts and behaviors of operating systems and tools this 
 
 ____
 
-- The default restriction on Active Directory Domain Controller -ADDC-, keeping standard accounts from logging in, in order to mantain secure NTDS.dit database. Standard users can't logging in via an interactive session on Domain Controller, but must do it over the network via Kerberos/LDAP -Lightweight Directory Access Protocol-
+- The default restriction on Active Directory Domain Controller -ADDC-, keeping standard accounts from logging in, in order to maintain secure NTDS.dit database. Standard users can't logging in via an interactive session on Domain Controller, but must do it over the network via Kerberos/LDAP -Lightweight Directory Access Protocol-
 
   (Las restricciones predeterminadas del servidor ADDC mantienen fuera de acceso cuentas estándar para mantener segura la base de datos NTDS.dit. Los usuarios estándar no pueden accersar al servidor DC mediante sesión interactiva, deben hacerlo a traves de la red via Kerberos/LDAP.)
   
