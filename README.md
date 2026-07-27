@@ -54,9 +54,9 @@ ____
 
   <img width="60%" alt="Screenshot_2026-07-23_21-31-19" src="https://github.com/user-attachments/assets/adadd00e-d4c0-4eed-b9ae-9ab8fe13f3fc" />
 
-- **Testing connection between MGMT and LAN and MGMT and DMZ**
+- **Testing connection between MGMT to LAN and MGMT to DMZ**
 
-  **(Probando la conexión entre MGMT y LAN y MGMT y DMZ)**
+  **(Probando la conexión entre MGMT a LAN y MGMT a DMZ)**
 
   Windows to Ubuntu-Wazuh ports 443, 1514 and 1515: Working properly.
 
