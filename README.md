@@ -2,6 +2,27 @@
 
 <img width="2800" height="2020" alt="home_lab_network_topology_v3" src="https://github.com/user-attachments/assets/a5dfa0c9-e741-4aa0-8dc7-5314792332d1" />
 
+## 2. Lab Infrastructure & Network Architecture
+
+The environment simulates an enterprise multi-tier infrastructure deployed inside an isolated hypervisor (KVM/QEMU on Fedora). Traffic routing, access control lists (ACLs), and inter-zone isolation are managed by a centralized virtualized pfSense firewall instance.
+
+### 2.1 Zone Segmentation Matrix
+The infrastructure is carved into four distinct functional security zones to minimize blast radius and enforce strict egress/ingress rules:
+
+| Security Zone | Subnet | Primary Assets | Trust Level / Purpose |
+| :--- | :--- | :--- | :--- |
+| **WAN Zone** | `10.10.0.0/24` | Kali Linux Attacker (Atacante) | **Untrusted** - Simulates external internet adversarial traffic. (**No confiable** Simula ataques por adversario externo por trafico de internet) |
+| **LAN Zone** | `192.168.200.0/24` | Win 11 Enterprise, Win Server 2025 DC | **Trusted** - Internal active directory domain infrastructure. |
+| **DMZ Zone** | `172.16.0.0/24` | DVWA (Debian 12 Web App) | **Semi-Trusted** - Public-facing exposed services with 1:1 NAT mapping. |
+| **MGMT Zone** | `172.16.1.0/24` | Wazuh SIEM (Ubuntu 26.04) | **Critical** - Out-of-band telemetry, log aggregation, and SOC monitoring. |
+
+### 2.2 Firewall Rule & Traffic Matrix
+The pfSense engine implements stateful packet inspection based on the following specific traffic parameters:
+
+*   **WAN → DMZ (Allowed):** Ingress traffic permitted exclusively via a 1:1 NAT mapping to the Debian 12 DVWA instance for external web application penetration testing.
+*   **WAN → MGMT / LAN (Explicitly Blocked):** Total drop rules configured. Administrative dashboards (pfSense GUI on `:8443`) are strictly inaccessible from the WAN zone.
+*   **LAN/DMZ → MGMT (Restricted Log Egress):** Windows/Debian nodes are strictly limited to egressing telemetry on ports `1514` and `1515` directly to the Wazuh server. No dashboard access or interactive sessions are allowed across this boundary.
+
 
 ____
 
