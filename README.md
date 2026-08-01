@@ -2,11 +2,11 @@
 
 <img width="2800" height="2020" alt="home_lab_network_topology_v3" src="https://github.com/user-attachments/assets/a5dfa0c9-e741-4aa0-8dc7-5314792332d1" />
 
-## 2. Lab Infrastructure & Network Architecture
+## Lab Infrastructure & Network Architecture
 
 The environment simulates an enterprise multi-tier infrastructure deployed inside an isolated hypervisor (KVM/QEMU on Fedora). Traffic routing, access control lists (ACLs), and inter-zone isolation are managed by a centralized virtualized pfSense firewall instance.
 
-### 2.1 Zone Segmentation Matrix
+### Zone Segmentation Matrix
 The infrastructure is carved into four distinct functional security zones to minimize blast radius and enforce strict egress/ingress rules:
 
 | Security Zone | Subnet | Primary Assets | Trust Level / Purpose |
@@ -16,7 +16,7 @@ The infrastructure is carved into four distinct functional security zones to min
 | **DMZ Zone** | `172.16.0.0/24` | DVWA (Debian 12 Web App) | **Semi-Trusted** - Public-facing exposed services with 1:1 NAT mapping. (**Semi Confiable** - Servicios expuestos a la red pública con un mapeo de NAT 1:1) |
 | **MGMT Zone** | `172.16.1.0/24` | Wazuh SIEM (Ubuntu 26.04) | **Critical** - Out-of-band telemetry, log aggregation, and SOC monitoring. (**Crítca**) -  |
 
-### 2.2 Firewall Rule & Traffic Matrix
+### Firewall Rule & Traffic Matrix
 The pfSense engine implements stateful packet inspection based on the following specific traffic parameters:
 
 *   **WAN → DMZ (Allowed):** Ingress traffic permitted exclusively via a 1:1 NAT mapping to the Debian 12 DVWA instance for external web application penetration testing.
@@ -26,18 +26,7 @@ The pfSense engine implements stateful packet inspection based on the following 
 
 ____
 
-### -Network Architecture. (Arquitectura de Red.)
-
-Three isolated zones behind a pfSense firewall — WAN (attacker), LAN (domain-joined
-assets), DMZ (exposed web app) — plus a dedicated MGMT zone for SIEM tooling. Every
-path shown here has been tested end-to-end, not just configured. (Tres zonas aisladas
-detrás de un firewall pfSense — WAN (atacante), LAN (activos unidos al dominio), DMZ
-(aplicación web expuesta) — más una zona MGMT dedicada para herramientas SIEM. Cada
-ruta mostrada aquí fue probada de extremo a extremo, no solo configurada.)
-
-____
-
-### -Learning by Building. (Aprender Haciendo.)
+## [-Learning by Building. (Aprender Haciendo.)]()
 
 These are some of the concepts and behaviors of operating systems and tools this project has taught me so far
 
