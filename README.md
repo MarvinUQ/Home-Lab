@@ -1,6 +1,6 @@
 # Home-lab Project.
 
-<img width="2800" height="2020" alt="home_lab_network_topology_v3" src="https://github.com/user-attachments/assets/a5dfa0c9-e741-4aa0-8dc7-5314792332d1" />
+<img src="Images/TopoMain.png" alt="TopoMain" width="90%">
 
 ## Lab Infrastructure & Network Architecture
 
