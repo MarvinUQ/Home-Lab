@@ -6,6 +6,6 @@
 
   (Las restricciones predeterminadas del servidor ADDC mantienen fuera de acceso cuentas estándar para mantener segura la base de datos NTDS.dit. Los usuarios estándar no pueden acceder al servidor DC mediante sesión interactiva, deben hacerlo a través de la red vía Kerberos/LDAP.)
   
-  <img width="60%" alt="Screenshot_2026-07-18_01-05-54" src="https://github.com/user-attachments/assets/7594d2dc-f614-42cc-8113-6138569561f8" />
+<img src="Images/LbB-ADDC-01.png" alt="ADDC01" width="70%">
 
 ____
