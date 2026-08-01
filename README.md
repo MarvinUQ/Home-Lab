@@ -11,7 +11,8 @@ The infrastructure is carved into four distinct functional security zones to min
 
 | Security Zone | Subnet | Primary Assets | Trust Level / Purpose |
 | :--- | :--- | :--- | :--- |
-| **WAN Zone** | `10.10.0.0/24` | Kali Linux Attacker (Atacante) | **Untrusted** - Simulates external internet adversarial traffic. (**No confiable** Simula ataques por adversario externo por trafico de internet) |
+| **WAN Zone** | `10.10.0.0/24` | Kali Linux Attacker (Atacante) | **Untrusted** - Simulates external internet adversarial traffic.
+(**No confiable** 0 Simula ataques por adversario externo por trafico de internet) |
 | **LAN Zone** | `192.168.200.0/24` | Win 11 Enterprise, Win Server 2025 DC | **Trusted** - Internal active directory domain infrastructure. |
 | **DMZ Zone** | `172.16.0.0/24` | DVWA (Debian 12 Web App) | **Semi-Trusted** - Public-facing exposed services with 1:1 NAT mapping. |
 | **MGMT Zone** | `172.16.1.0/24` | Wazuh SIEM (Ubuntu 26.04) | **Critical** - Out-of-band telemetry, log aggregation, and SOC monitoring. |
