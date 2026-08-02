@@ -2,6 +2,8 @@
 
 - pfSense up and running
 
+<img src="Images/dmz-01.png" alt="dmz-01" width="70%">
+
   <img width="60%" alt="Screenshot_2026-07-24_10-43-54" src="https://github.com/user-attachments/assets/b390abef-18db-4107-bf47-ec4e3e5c9000" />
 
 - Four separate networks, each with a different trust level, all routed and filtered through one firewall.*
@@ -14,10 +16,12 @@
 
   LAN:
 
+<img src="Images/dmz-02.png" alt="dmz-02" width="70%">
   <img width="60%" alt="Screenshot_2026-07-24_14-03-22" src="https://github.com/user-attachments/assets/b5f5b7b4-b900-486a-a95e-fb82ec459547" />
 
   DMZ:
 
+<img src="Images/dmz-03.png" alt="dmz-03" width="70%">
   <img width="60%" alt="Screenshot_2026-07-23_21-31-19" src="https://github.com/user-attachments/assets/adadd00e-d4c0-4eed-b9ae-9ab8fe13f3fc" />
 
 - **Testing connection between MGMT and LAN, and between MGMT and DMZ**
@@ -27,31 +31,36 @@
   Windows to Ubuntu-Wazuh ports 443, 1514 and 1515: Working properly.
 
   (De Windows a Ubuntu-Wazuh los puertos 443, 1514 y 1515: Funcionando apropiadamente)
- 
+
+<img src="Images/dmz-04.png" alt="dmz-04" width="70%">
   <img width="60%" alt="Screenshot_2026-07-23_22-47-34" src="https://github.com/user-attachments/assets/40858b96-750f-40d9-816d-b75d114af801" />
 
 - Debian-DVWA to Ubuntu-Wazuh ports 1514 and 1515: Working properly
   
   (De Debian-DVWA a Ubuntu-Wazuh puertos 1514 y 1515: Funcionando apropiadamente)
-  
+
+<img src="Images/dmz-05.png" alt="dmz-05" width="70%">
   <img width="60%" alt="Screenshot_2026-07-23_18-01-19" src="https://github.com/user-attachments/assets/2b3a98b9-4b6f-49f4-b088-378bf32017ff" />
 
 - After rebooting: ports 1514 and 1515 unexpectedly started refusing connections — the actual bug. Port 443 refused too, but that one's expected: DMZ was never supposed to reach the dashboard in the first place.
 
   (Después de reiniciar: los puertos 1514 y 1515 empezaron a rechazar conexiones inesperadamente — el error real. El puerto 443 también fue rechazado, pero eso es lo esperado: DMZ nunca debía poder alcanzar el dashboard.)
 
+<img src="Images/dmz-06.png" alt="dmz-06" width="70%">
   <img width="60%" alt="Screenshot_2026-07-23_19-16-07" src="https://github.com/user-attachments/assets/ec250bd5-df00-486f-85e4-a20af8289336" />
 
 - After looking through pfSense's firewall rules for configuration mistakes, everything was clean; the next step was checking that both Debian-DVWA's and Ubuntu-Wazuh's firewalls were disabled, to rule out that they were responsible for the connection bug.
 
   (Después de revisar entre las reglas establecidas en pfSense firewall no se encontraron errores de configuración, el siguiente paso fue revisar que los firewalls tanto de Debian-DVWA como Ubuntu-Wazuh estuviesen inactivos para descartar que fuesen los causantes del error de conexión.)
 
+<img src="Images/dmz-07.png" alt="dmz-07" width="70%">
   <img width="60%" alt="Screenshot_2026-07-23_19-19-19" src="https://github.com/user-attachments/assets/155d0194-28f7-498e-a349-3d92c76c4614" />
 
  - Ubuntu-Wazuh firewall disabled, then running command ```ss -tulpn``` (socket statistics) to check the network and ports' status on Wazuh, all 3 ports listening.
 
    (Firewall de Ubuntu-Wazuh deshabilitado, luego se corre el comando ```ss -tulpn``` (estadísticas del socket) para verificar el estado de la red y los puertos de Wazuh, los 3 puertos en funcionamiento.)
 
+<img src="Images/dmz-08.png" alt="dmz-08" width="70%">
    <img width="60%" alt="Screenshot_2026-07-22_18-49-34" src="https://github.com/user-attachments/assets/f0a677cc-2572-47b6-a7e6-532c3d80a303" />
 
 - The next test was to reconfigure the IP address on pfSense
@@ -59,6 +68,7 @@
 
   (La siguiente prueba fue mediante la reconfiguración de la dirección IP en pfSense.)
 
+<img src="Images/dmz-09.png" alt="dmz-09" width="70%">
   <img width="60%" alt="Screenshot_2026-07-24_22-46-00" src="https://github.com/user-attachments/assets/5e5f9cb9-5e35-4d53-83b2-37f5bf000693" />
 
 
@@ -68,10 +78,12 @@
 
   MGMT PING --> DMZ
 
+<img src="Images/dmz-10.png" alt="dmz-10" width="70%">
   <img width="60%" alt="Screenshot_2026-07-23_17-45-19" src="https://github.com/user-attachments/assets/f136b3e3-00b4-40a8-817c-429fd3a38005" />
 
   DMZ PING --> MGMT
-  
+
+  <img src="Images/dmz-11.png" alt="dmz-11" width="70%">
   <img width="60%" alt="Screenshot_2026-07-23_17-59-18" src="https://github.com/user-attachments/assets/69958619-6b83-416d-be54-b439a7ba2e9c" />
 
   Both ping tests were successful, with 0% packet loss.
@@ -82,6 +94,7 @@
 
   (La siguiente herramienta de diagnóstico era la tabla ARP, para buscar discrepancias o anomalías.)
 
+<img src="Images/dmz-12.png" alt="dmz-12" width="70%">
   <img width="60%" alt="Screenshot_2026-07-24_10-47-04" src="https://github.com/user-attachments/assets/64becdfb-6c23-4b9c-bd10-af29001105eb" />
 
   **Here's the lead anomaly. First, this would be normal behavior (I'll use LAN and Windows as examples): LAN's 192.168.200.1 was assigned on pfSense as the default gateway for all devices connected to pfSense on LAN. Every device on LAN with an IP address in the 192.168.200.1/24 range and 192.168.200.1 as its gateway will reach pfSense as its router's gateway. pfSense assigned this gateway, 192.168.200.1, the MAC address 52:54:00:71:bb:23, and Windows 192.168.200.40 correctly displays its NIC's MAC address, 52:54:00:e1:98:0f. Both of them had their respective MAC addresses displayed on the ARP table.
@@ -92,7 +105,8 @@
 - One last corroboration, using command ```arp -an``` on pfSense's shell to be sure there are no discrepancies with what was shown on the WebGUI.
   
   (Una última corroboración, utilizando el comando ```arp -an``` en la línea de comandos en pfSense para asegurarse que no hay discrepancias con lo mostrado en la interfaz de la web.)
-  
+
+<img src="Images/dmz-13.png" alt="dmz-13" width="70%">
   <img width="60%" alt="Screenshot_2026-07-24_10-54-32" src="https://github.com/user-attachments/assets/f3aedf84-0003-49f5-a614-d27ffffbd78f" />
 
   No discrepancies.
@@ -101,6 +115,7 @@
 
   (Explicación del comportamiento normal: DMZ es una red aislada, con solo 2 dispositivos, Debian-DVWA y un router (pfSense). La única conexión posible dentro de esta red es entre Debian-DVWA y el router; cuando Debian-DVWA envía un pedido ARP, el único equipo escuchando y con posibilidad de respuesta es el router. Usando el comando ```ip neighbor```, se envía un pedido de respuesta de la MAC hacia todos los equipos escuchando, para que el equipo que tiene asignada la dirección IPv4 172.16.0.1 responda de vuelta su dirección MAC. Un equipo responde, y la dirección MAC de este equipo es: 52:54:00:fb:0a:b1 ... Y aquí está, problema encontrado.)
 
+<img src="Images/dmz-14.png" alt="dmz-14" width="70%">
   <img width="60%" alt="Screenshot_2026-07-24_10-56-49" src="https://github.com/user-attachments/assets/8cbfbb73-0609-40cf-b92c-a6174f18752d" />
 
 - What's happening here? There's a conflict: the same IP address is being used as the default gateway for the bridge between the virtual network and the host — in this case, Fedora Linux, as seen on *virbr3*. The MAC address answering the MAC request is the bridge's MAC: 52:54:00:fb:0a:b1. The default gateway on pfSense should be the one answering back the MAC request: 52:54:00:63:63:46.
