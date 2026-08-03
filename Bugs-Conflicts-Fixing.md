@@ -192,3 +192,131 @@ diagnóstico de la causa raíz del conflicto ARP arriba — comparando las tabla
 de pfSense y Debian con las configuraciones de red de libvirt para encontrar el
 respondedor duplicado de Capa 2 — fue trabajo independiente.)
 
+---
+
+## **Wazuh MGMT zone has no internet path — AiSOC calls to Gemini/Groq fail. (Zona MGMT de Wazuh sin acceso a internet — las llamadas de AiSOC a Gemini/Groq fallan)**
+
+**Status as of 2026-08-02: root cause confirmed, fix not yet applied.** *(Estado al 2026-08-02: causa raíz confirmada, solución aún no aplicada.)*
+
+### Problem (Problema)
+
+AiSOC (integrated on Wazuh) failed every call to Gemini and Groq with a DNS resolution error (`NameResolutionError`, `Temporary failure in name resolution`) for both `generativelanguage.googleapis.com` and `api.groq.com`. This is expected behavior, not a bug in AiSOC itself — MGMT was deliberately built as a fully isolated, out-of-band zone with no DNS, no default route, and no NAT path to the real internet.
+
+*(AiSOC, integrado en Wazuh, falló en cada llamada a Gemini y Groq con un error de resolución DNS. Esto es un comportamiento esperado, no un error de AiSOC — MGMT se construyó deliberadamente como una zona totalmente aislada y fuera de banda, sin DNS, sin ruta por defecto y sin NAT hacia internet real.)*
+
+**Immediate action, independent of the network fix:** both API keys (Gemini, Groq) were revoked, since the failed-call logs had already printed the live key strings in plaintext. *(Acción inmediata, independiente de la solución de red: ambas llaves de API — Gemini y Groq — fueron revocadas, ya que los registros de las llamadas fallidas ya habían impreso las llaves en texto plano.)*
+
+---
+
+### Discarded approach: second NIC on Wazuh (Enfoque descartado: segunda NIC en Wazuh)
+
+A second NIC (libvirt's default NAT'd network, `192.168.100.0/24` via `virbr0`) was attached directly to the Wazuh VM to reach the internet for `apt`/`pip`. Two problems surfaced:
+
+- **It never actually worked as intended.** `ip route show` on the guest revealed two competing default routes — the original static MGMT route (`via 172.16.1.1`, implicit metric 0) and the new NIC's DHCP route (`via 192.168.100.1`, metric 1024). Linux prefers the lowest metric, so all traffic, including the `8.8.8.8` test ping, kept going out the MGMT interface, not the new NIC.
+- **It broke the isolation model even if it had worked.** MGMT is documented as fully out-of-band specifically so nothing unaccounted-for touches it. A second NIC creates an egress path pfSense never sees or logs — no firewall rule, no visibility in `Status > System Logs`.
+
+The NIC was removed (confirmed via `virt-manager` showing a single `MGMT_Zone` NIC, and guest-side `ip a` / `ip route show` showing only `enp1s0` and the one static route to `172.16.1.1`).
+
+*(Se conectó una segunda NIC directamente a la VM de Wazuh para llegar a internet. Nunca funcionó como se esperaba por dos rutas por defecto compitiendo, y además rompía el modelo de aislamiento documentado para MGMT, ya que ese tráfico nunca sería visto ni registrado por pfSense. La NIC fue removida y confirmada como eliminada tanto en virt-manager como dentro del propio invitado.)*
+
+---
+
+### Chosen approach: NAT MGMT egress out through LAN via pfSense (Enfoque elegido: salida de MGMT vía LAN a través de pfSense)
+
+**Correction made along the way:** the first plan assumed outbound NAT should go out pfSense's WAN interface, following the standard pfSense pattern. That's backwards for this lab — WAN is deliberately the isolated Kali/attacker-simulation zone with no real internet path at all. **LAN** is the only zone bridged to Fedora's real network (`virbr1` → Fedora's physical NIC `enp7s0`), so that's the only viable egress.
+
+*(Corrección hecha en el camino: el plan inicial asumía que el NAT de salida debía usar la interfaz WAN de pfSense. Eso está invertido para este laboratorio — WAN es deliberadamente la zona aislada de simulación de atacante (Kali), sin salida real a internet. LAN es la única zona conectada a la red real de Fedora, así que es la única salida viable.)*
+
+Diagnosis proceeded layer by layer, on both Fedora and pfSense:
+
+1. **`net.ipv4.ip_forward`** on Fedora — already `1`. No action needed.
+2. **`firewall-cmd --get-active-zones`** — `enp7s0` and `virbr1` both sit in the same zone (`public`), so no cross-zone forwarding policy was needed, only the zone's own settings.
+3. **Masquerade check** — `firewall-cmd --zone=public --list-all` showed `masquerade: no`. This was the missing piece for Fedora to rewrite MGMT's private source IPs before sending them out `enp7s0`. Fixed:
+   ```bash
+   sudo firewall-cmd --zone=public --add-masquerade --permanent
+   sudo firewall-cmd --reload
+   ```
+   Confirmed `masquerade: yes` afterward.
+4. **Retest (pfSense Diagnostics > Ping, source LAN, target `8.8.8.8`)** — still 100% packet loss, no reply at all. Masquerade alone wasn't enough.
+5. **pfSense gateway check (System > Routing > Gateways)** — no IPv4 gateway existed on LAN at all; only IPv6 DHCP gateways plus an unused `WAN_DHCP` (IPv4), with `Default gateway IPv4` set to `Automatic`. Since WAN never gets a real DHCP lease (it's the isolated zone), "Automatic" was effectively resolving to nothing.
+6. **Correction made along the way:** the first plan was to add a `0.0.0.0/0` static route via a new LAN gateway. pfSense's GUI does not allow static routes to `0.0.0.0/0` — the default route can only be set through **System > Routing > Gateways > Default gateway**, not the Static Routes page.
+7. **Fix applied:** added a new gateway —
+   - Interface: LAN
+   - Address Family: IPv4
+   - Name: `LAN_FEDORA_GW`
+   - Gateway: `192.168.200.254` (Fedora's `virbr1` bridge address)
+
+   Then set **Default gateway IPv4** to `LAN_FEDORA_GW` and applied. This leaves `WAN_DHCP` and pfSense's WAN config completely untouched.
+8. **Retest** — packet loss changed character: instead of silent 100% loss, pfSense now received an explicit reply on all 3 pings — **"Destination Port Unreachable" from `192.168.200.254`** (Fedora's own bridge address). This is meaningful: the packet is now actually reaching Fedora and being actively rejected, rather than getting lost with no route.
+
+*(El diagnóstico avanzó capa por capa, tanto en Fedora como en pfSense: reenvío de paquetes ya activo, masquerade faltante y luego corregido, sin gateway IPv4 en LAN, corrección sobre el uso incorrecto de una ruta estática 0.0.0.0/0 — en pfSense el gateway por defecto solo se configura desde Gateways, no desde Rutas Estáticas — y finalmente la adición de un gateway real en LAN apuntando al puente de Fedora. La prueba pasó de pérdida silenciosa de paquetes a una respuesta explícita de "Destination Port Unreachable" desde la propia dirección de Fedora, señal de que el paquete ya llega pero es rechazado activamente.)*
+
+---
+
+### Root cause (Causa raíz)
+
+`virbr1` is defined in libvirt as an **Isolated network** type (confirmed in `virt-manager`'s NIC details panel). Per libvirt's own firewall model, isolated networks get dedicated `iptables`/`nftables` chains (`LIBVIRT_FWI` / `LIBVIRT_FWO` / `LIBVIRT_FWX`) that explicitly **REJECT — with `reject-with icmp-port-unreachable`, matching exactly what was observed** — any forwarded traffic between that bridge and any other interface. This enforcement is independent of, and takes precedence over, firewalld's own zone-level `forward`/`masquerade` settings.
+
+That's why every fix so far was necessary but not sufficient: `ip_forward=1`, `masquerade=yes`, and a correct pfSense default gateway all had to be true for the packet to even reach the point of being forwarded — but libvirt's own isolation rule for `virbr1` rejects it regardless, by design, since "isolated" is meant to guarantee exactly that.
+
+*(`virbr1` está definido en libvirt como una red de tipo **Isolated**. Según el modelo de firewall propio de libvirt, las redes aisladas reciben cadenas dedicadas de iptables/nftables que rechazan explícitamente — con `reject-with icmp-port-unreachable`, coincidiendo exactamente con lo observado — cualquier tráfico reenviado entre ese puente y cualquier otra interfaz. Este bloqueo es independiente de la configuración de zona de firewalld y tiene prioridad sobre ella. Por eso cada corrección anterior era necesaria pero no suficiente: libvirt rechaza el reenvío por diseño, ya que "aislada" está pensado para garantizar justamente eso.)*
+
+---
+
+### Next step — not yet done (Siguiente paso — aún pendiente)
+
+Resolving this means changing how libvirt treats `virbr1`'s forwarding — either altering the network's `<forward>` mode, or inserting an explicit allow ahead of libvirt's own `REJECT` rules — without breaking the deliberate design where **pfSense**, not libvirt, is the router for this topology. This has not been attempted yet.
+
+*(Resolver esto implica cambiar cómo libvirt trata el reenvío de `virbr1` — ya sea alterando el modo `<forward>` de la red, o insertando una regla de permiso explícita antes de las reglas REJECT propias de libvirt — sin romper el diseño deliberado donde pfSense, no libvirt, es el enrutador de esta topología. Esto aún no se ha intentado.)*
+
+
+**Update the status line at the top of this entry to: `Status: Resolved (2026-08-02)`.**
+
+### Resolution (Resolución)
+
+The remaining blocker wasn't libvirt's *isolation* enforcement as first suspected — it was simpler and more specific: `LAN_Zone`'s libvirt network was defined with `<forward mode='open'/>`. In this mode libvirt deliberately does **not** insert its own iptables/masquerade rules, on the assumption the admin will manage forwarding manually. That's exactly what left Fedora's forwarding half-configured even after `ip_forward=1` and firewalld's `masquerade` were both correctly set. Fix: switched the network to `<forward mode='nat'/>` and cycled it (`virsh net-destroy LAN_Zone && virsh net-start LAN_Zone`), so libvirt now manages NAT/masquerade for that bridge automatically (running alongside the firewalld masquerade rule added earlier — redundant on the same traffic, not conflicting).
+
+*(El bloqueo restante no era la aplicación de aislamiento de libvirt como se sospechó al inicio — era más simple y específico: la red `LAN_Zone` estaba definida con `<forward mode='open'/>`, modo en el que libvirt deliberadamente no inserta sus propias reglas de iptables/masquerade. Se corrigió cambiando el modo a `nat` y reiniciando la red.)*
+
+At the same time, two more pieces were required together before the path fully worked:
+
+- **pfSense MGMT rule**, temporarily widened to Any/Any/Any for testing (later locked back down — see below).
+- **pfSense Outbound NAT** (Hybrid mode): Interface LAN, Source `172.16.1.0/24`, Translation = Interface Address.
+
+With libvirt's NAT mode, the MGMT rule, and the Outbound NAT mapping all in place together, both `pfSense → 8.8.8.8` and `Wazuh → 8.8.8.8` pings confirmed 0% packet loss.
+
+*(Al mismo tiempo, se necesitaron dos piezas más junto con lo anterior: la regla de MGMT ampliada temporalmente para pruebas, y el NAT de salida en modo Hybrid con la traducción hacia la dirección de LAN. Con las tres piezas juntas, las pruebas de ping confirmaron 0% de pérdida de paquetes.)*
+
+**DNS — the actual cause wasn't Unbound's ACL.** A `MGMT_Allow` access list already existed and was correctly configured; the REFUSED-style symptom was actually the query never leaving Wazuh at all. `resolvectl status` showed `Current Scopes: none` on `enp1s0` — systemd-resolved had no nameserver assigned, and netplan's `00-installer-config.yaml` had no `nameservers:` block to begin with. Fixed by adding:
+
+```yaml
+nameservers:
+  addresses: [172.16.1.1]
+```
+
+and running `netplan apply`. Confirmed persistent (sourced from the config file, not a runtime-only `resolvectl` override).
+
+*(DNS — la causa real no era la lista de acceso de Unbound, que ya estaba bien configurada. La consulta nunca salía de Wazuh: systemd-resolved no tenía servidor de nombres asignado, ya que el archivo netplan no incluía el bloque `nameservers`. Se corrigió agregando ese bloque y aplicando `netplan apply`, confirmado como persistente.)*
+
+**Final MGMT ruleset**, locked down from the wide-open testing rule to three least-privilege rules:
+
+| # | Protocol | Source | Destination | Port | Purpose |
+|---|----------|--------|-------------|------|---------|
+| 1 | TCP/UDP | MGMT net | `172.16.1.1` | 53 (DNS) | Queries to pfSense's own resolver |
+| 2 | ICMP (Echo Request) | MGMT net | any | — | Diagnostics (ping) |
+| 3 | TCP | MGMT net | `AI_API_Endpoints` alias | 443 | Groq + Gemini API calls |
+
+Rule 2 originally selected **Echo Reply** instead of **Echo Request** — an easy mix-up, since pfSense lists them adjacently in the subtype picker. Since pfSense is stateful, only the request direction needed an explicit rule; the reply is auto-permitted via the state table once corrected.
+
+*(Regla final de MGMT: tres reglas de privilegio mínimo — DNS hacia el resolutor de pfSense, ICMP Echo Request para diagnóstico, y TCP/443 hacia el alias de las APIs de IA. La regla ICMP inicialmente tenía seleccionado "Echo Reply" en vez de "Echo Request" por error — al ser pfSense un firewall con estado, solo la solicitud necesitaba regla explícita.)*
+
+Final verification — `resolvectl query`, `nc -zv <host> 443` for both Groq and Gemini, and `ping -c3 8.8.8.8` — all succeeded from Wazuh through the locked-down ruleset.
+
+---
+
+### Known accepted limitation (Limitación aceptada conocida)
+
+Gemini's API sits behind Google's anycast infrastructure with many rotating addresses. pfSense's FQDN-type alias only re-resolves periodically and caches a small snapshot, while Wazuh's own DNS queries can return a different IP each time. This produces intermittent blocked connections to Gemini specifically — visible in the firewall log as legitimate TCP SYNs to shifting `172.217.x.x` addresses hitting default-deny, not a misconfiguration. Documented as an accepted risk rather than something to chase further. If it becomes a practical problem, options are: a shorter alias re-resolution interval, a broader IP-range allow (trades away some least-privilege precision), or relying on AiSOC's own retry logic to absorb occasional failures.
+
+*(La API de Gemini está detrás de infraestructura anycast de Google con muchas direcciones rotativas. El alias de pfSense se re-resuelve periódicamente pero con una instantánea pequeña, mientras que las consultas DNS de Wazuh pueden devolver una IP distinta cada vez. Esto produce bloqueos intermitentes hacia Gemini específicamente — no es un error de configuración, sino un límite estructural. Se documenta como riesgo aceptado en vez de algo a resolver más a fondo.)*
+
