@@ -57,7 +57,7 @@ ES:   Firewall de Ubuntu-Wazuh deshabilitado, luego se corre el comando ```ss -t
 - The next test was to reconfigure the IP address on pfSense
 
 
-  (La siguiente prueba fue mediante la reconfiguración de la dirección IP en pfSense.)
+ES:  La siguiente prueba fue mediante la reconfiguración de la dirección IP en pfSense.
 
 <img src="Images/dmz-09.png" alt="dmz-09" width="70%">
 
@@ -95,6 +95,8 @@ ES: **Acá está la anomalía principal. Primero, este sería el comportamiento 
 <img src="Images/dmz-13.png" alt="dmz-13" width="70%">
 
   No discrepancies.
+  
+ES:  No hay discrepancias.
 
 - Explanation of normal behavior: DMZ is an isolated network, with only 2 devices in it, Debian-DVWA and the router (pfSense). The only possible connection inside this network is between Debian-DVWA and the router; when Debian-DVWA sends an ARP request, the only device listening and available to answer is the router. Using the command ```ip neighbor```, a request is sent to all devices listening for the device with the IPv4 address 172.16.0.1 to answer back its MAC address. One device answers, and the MAC address of this device is: 52:54:00:fb:0a:b1 ... This is it. Problem found.
 
@@ -138,7 +140,7 @@ ES:  La solución elegida fue la segunda opción; esta es la que se adapta mejor
  
   2. A (virtual) straight connection, similar to a serial cable connected directly between Fedora and Ubuntu-Wazuh, via ***virsh console***, a tool of virt-manager. This connection doesn't need the network to be working to connect Fedora to Ubuntu-Wazuh, which makes it well suited for troubleshooting and for repairing the virtual machine even if it has boot problems.
 
-ES: (Para cerrar, con ambas redes en completo aislamiento de Fedora, es necesario garantizarle a este acceso a Ubuntu-Wazuh para facilidad de administración y solución de problemas. Este acceso es garantizado mediante 2 métodos:
+ES: Para cerrar, con ambas redes en completo aislamiento de Fedora, es necesario garantizarle a este acceso a Ubuntu-Wazuh para facilidad de administración y solución de problemas. Este acceso es garantizado mediante 2 métodos:
 
   1. A nivel de red, utilizando reglas de firewall en pfSense para conectar Fedora por medio del puente entre este y la red LAN en 192.168.200.254, dejando pasar comunicación por el puerto TCP/22 para ***SSH***, un protocolo de comunicación rápido, fiable y seguro.
     
@@ -148,7 +150,7 @@ ES: (Para cerrar, con ambas redes en completo aislamiento de Fedora, es necesari
 
   SSH enabled and working.
 
-  (SSH habilitado y funcionando)
+ES: SSH habilitado y funcionando
 
 - After enabling virsh console and running it, the host's console only responds to the exit key combination ```ctrl + ]```, so this line ```console=tty0 console=ttyS0, 115200n8``` must be added to Ubuntu-Wazuh's GRUB configuration file to tell the kernel to send the console output to 2 different consoles, ```console=ttyS0``` being the serial console that is connected to virsh console.
 
