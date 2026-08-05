@@ -227,7 +227,7 @@ ES: *Se conectó una segunda NIC directamente a la VM de Wazuh para llegar a int
 
 **Correction made along the way:** the first plan assumed outbound NAT should go out pfSense's WAN interface, following the standard pfSense pattern. That's backwards for this lab — WAN is deliberately the isolated Kali/attacker-simulation zone with no real internet path at all. **LAN** is the only zone bridged to Fedora's real network (`virbr1` → Fedora's physical NIC `enp7s0`), so that's the only viable egress.
 
-ES: *(Corrección hecha en el camino: el plan inicial asumía que el NAT de salida debía usar la interfaz WAN de pfSense. Eso está invertido para este laboratorio — WAN es deliberadamente la zona aislada de simulación de atacante (Kali), sin salida real a internet. LAN es la única zona conectada a la red real de Fedora, así que es la única salida viable.)*
+ES: *Corrección hecha en el camino: el plan inicial asumía que el NAT de salida debía usar la interfaz WAN de pfSense. Eso está invertido para este laboratorio — WAN es deliberadamente la zona aislada de simulación de atacante (Kali), sin salida real a internet. LAN es la única zona conectada a la red real de Fedora, así que es la única salida viable.*
 
 Diagnosis proceeded layer by layer, on both Fedora and pfSense:
 
@@ -264,8 +264,6 @@ Diagnosis proceeded layer by layer, on both Fedora and pfSense:
 
 ES: *El diagnóstico avanzó capa por capa, tanto en Fedora como en pfSense: reenvío de paquetes ya activo, masquerade faltante y luego corregido, sin gateway IPv4 en LAN, corrección sobre el uso incorrecto de una ruta estática 0.0.0.0/0 — en pfSense el gateway por defecto solo se configura desde Gateways, no desde Rutas Estáticas — y finalmente la adición de un gateway real en LAN apuntando al puente de Fedora. La prueba pasó de pérdida silenciosa de paquetes a una respuesta explícita de "Destination Port Unreachable" desde la propia dirección de Fedora, señal de que el paquete ya llega pero es rechazado activamente.*
 
----
-
 ### Root cause (Causa raíz)
 
 `virbr1` is defined in libvirt as an **Isolated network** type (confirmed in `virt-manager`'s NIC details panel). Per libvirt's own firewall model, isolated networks get dedicated `iptables`/`nftables` chains (`LIBVIRT_FWI` / `LIBVIRT_FWO` / `LIBVIRT_FWX`) that explicitly **REJECT — with `reject-with icmp-port-unreachable`, matching exactly what was observed** — any forwarded traffic between that bridge and any other interface. This enforcement is independent of, and takes precedence over, firewalld's own zone-level `forward`/`masquerade` settings.
@@ -274,27 +272,23 @@ That's why every fix so far was necessary but not sufficient: `ip_forward=1`, `m
 
 ES: *`virbr1` está definido en libvirt como una red de tipo **Isolated**. Según el modelo de firewall propio de libvirt, las redes aisladas reciben cadenas dedicadas de iptables/nftables que rechazan explícitamente — con `reject-with icmp-port-unreachable`, coincidiendo exactamente con lo observado — cualquier tráfico reenviado entre ese puente y cualquier otra interfaz. Este bloqueo es independiente de la configuración de zona de firewalld y tiene prioridad sobre ella. Por eso cada corrección anterior era necesaria pero no suficiente: libvirt rechaza el reenvío por diseño, ya que "aislada" está pensado para garantizar justamente eso.*
 
----
-
-### Next step — not yet done (Siguiente paso — aún pendiente)
+### Next step (Siguiente paso)
 
 Resolving this means changing how libvirt treats `virbr1`'s forwarding — either altering the network's `<forward>` mode, or inserting an explicit allow ahead of libvirt's own `REJECT` rules — without breaking the deliberate design where **pfSense**, not libvirt, is the router for this topology. This has not been attempted yet.
 
 ES: *Resolver esto implica cambiar cómo libvirt trata el reenvío de `virbr1` — ya sea alterando el modo `<forward>` de la red, o insertando una regla de permiso explícita antes de las reglas REJECT propias de libvirt — sin romper el diseño deliberado donde pfSense, no libvirt, es el enrutador de esta topología. Esto aún no se ha intentado.*
 
-
-**Update the status line at the top of this entry to: `Status: Resolved (2026-08-02)`.**
-
-### Resolution (Resolución)
-
-The remaining blocker wasn't libvirt's *isolation* enforcement as first suspected — it was simpler and more specific: `LAN_Zone`'s libvirt network was defined with `<forward mode='open'/>`. In this mode libvirt deliberately does **not** insert its own iptables/masquerade rules, on the assumption the admin will manage forwarding manually. That's exactly what left Fedora's forwarding half-configured even after `ip_forward=1` and firewalld's `masquerade` were both correctly set. Fix: switched the network to `<forward mode='nat'/>` and cycled it (`virsh net-destroy LAN_Zone && virsh net-start LAN_Zone`), so libvirt now manages NAT/masquerade for that bridge automatically (running alongside the firewalld masquerade rule added earlier — redundant on the same traffic, not conflicting).
-
-ES: *El bloqueo restante no era la aplicación de aislamiento de libvirt como se sospechó al inicio — era más simple y específico: la red `LAN_Zone` estaba definida con `<forward mode='open'/>`, modo en el que libvirt deliberadamente no inserta sus propias reglas de iptables/masquerade. Se corrigió cambiando el modo a `nat` y reiniciando la red.*
+<img src="Images/AI-Int-Con14.png" alt="AI-Int-Con14" width="70%">
 
 At the same time, two more pieces were required together before the path fully worked:
 
 - **pfSense MGMT rule**, temporarily widened to Any/Any/Any for testing (later locked back down — see below).
+
+<img src="Images/AI-Int-Con24.png" alt="AI-Int-Con24" width="70%">
+
 - **pfSense Outbound NAT** (Hybrid mode): Interface LAN, Source `172.16.1.0/24`, Translation = Interface Address.
+
+<img src="Images/AI-Int-Con26.png" alt="AI-Int-Con26" width="70%">
 
 With libvirt's NAT mode, the MGMT rule, and the Outbound NAT mapping all in place together, both `pfSense → 8.8.8.8` and `Wazuh → 8.8.8.8` pings confirmed 0% packet loss.
 
