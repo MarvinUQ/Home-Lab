@@ -260,6 +260,8 @@ Diagnosis proceeded layer by layer, on both Fedora and pfSense:
    
 8. **Retest** — packet loss changed character: instead of silent 100% loss, pfSense now received an explicit reply on all 3 pings — **"Destination Port Unreachable" from `192.168.200.254`** (Fedora's own bridge address). This is meaningful: the packet is now actually reaching Fedora and being actively rejected, rather than getting lost with no route.
 
+<img src="Images/AI-Int-Con04.png" alt="AI-Int-Con04" width="70%">
+
 ES: *El diagnóstico avanzó capa por capa, tanto en Fedora como en pfSense: reenvío de paquetes ya activo, masquerade faltante y luego corregido, sin gateway IPv4 en LAN, corrección sobre el uso incorrecto de una ruta estática 0.0.0.0/0 — en pfSense el gateway por defecto solo se configura desde Gateways, no desde Rutas Estáticas — y finalmente la adición de un gateway real en LAN apuntando al puente de Fedora. La prueba pasó de pérdida silenciosa de paquetes a una respuesta explícita de "Destination Port Unreachable" desde la propia dirección de Fedora, señal de que el paquete ya llega pero es rechazado activamente.*
 
 ---
