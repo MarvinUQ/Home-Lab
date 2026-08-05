@@ -208,8 +208,6 @@ ES: *AiSOC, integrado en Wazuh, falló en cada llamada a Gemini y Groq con un er
 
 ES: *Acción inmediata, independiente de la solución de red: ambas llaves de API — Gemini y Groq — fueron revocadas, ya que los registros de las llamadas fallidas ya habían impreso las llaves en texto plano.*
 
----
-
 ### Discarded approach: second NIC on Wazuh (Enfoque descartado: segunda NIC en Wazuh)
 
 A second NIC (libvirt's default NAT'd network, `192.168.100.0/24` via `virbr0`) was attached directly to the Wazuh VM to reach the internet for `apt`/`pip`. Two problems surfaced:
@@ -220,8 +218,6 @@ A second NIC (libvirt's default NAT'd network, `192.168.100.0/24` via `virbr0`) 
 The NIC was removed (confirmed via `virt-manager` showing a single `MGMT_Zone` NIC, and guest-side `ip a` / `ip route show` showing only `enp1s0` and the one static route to `172.16.1.1`).
 
 ES: *Se conectó una segunda NIC directamente a la VM de Wazuh para llegar a internet. Nunca funcionó como se esperaba por dos rutas por defecto compitiendo, y además rompía el modelo de aislamiento documentado para MGMT, ya que ese tráfico nunca sería visto ni registrado por pfSense. La NIC fue removida y confirmada como eliminada tanto en virt-manager como dentro del propio invitado.*
-
----
 
 ### Chosen approach: NAT MGMT egress out through LAN via pfSense (Enfoque elegido: salida de MGMT vía LAN a través de pfSense)
 
@@ -328,4 +324,149 @@ Final verification — `resolvectl query`, `nc -zv <host> 443` for both Groq and
 Gemini's API sits behind Google's anycast infrastructure with many rotating addresses. pfSense's FQDN-type alias only re-resolves periodically and caches a small snapshot, while Wazuh's own DNS queries can return a different IP each time. This produces intermittent blocked connections to Gemini specifically — visible in the firewall log as legitimate TCP SYNs to shifting `172.217.x.x` addresses hitting default-deny, not a misconfiguration. Documented as an accepted risk rather than something to chase further. If it becomes a practical problem, options are: a shorter alias re-resolution interval, a broader IP-range allow (trades away some least-privilege precision), or relying on AiSOC's own retry logic to absorb occasional failures.
 
 ES: *La API de Gemini está detrás de infraestructura anycast de Google con muchas direcciones rotativas. El alias de pfSense se re-resuelve periódicamente pero con una instantánea pequeña, mientras que las consultas DNS de Wazuh pueden devolver una IP distinta cada vez. Esto produce bloqueos intermitentes hacia Gemini específicamente — no es un error de configuración, sino un límite estructural. Se documenta como riesgo aceptado en vez de algo a resolver más a fondo.*
+
+---
+
+# WAN → LAN ICMP Connectivity Troubleshooting
+# Solución de problemas de conectividad ICMP WAN → LAN
+
+**Date / Fecha:** 2026-08-04
+**Lab zone / Zona del laboratorio:** WAN (10.10.0.0/24) → LAN (192.168.200.0/24)
+**Source / Origen:** Kali — 10.10.0.10
+**Target / Objetivo:** Win11Lab — 192.168.200.40
+**pfSense version:** 2.8.1-RELEASE
+
+---
+
+## Overview / Resumen
+
+A WAN-to-LAN ICMP echo rule appeared correctly configured and enabled in the pfSense GUI, but real ping traffic from Kali consistently failed with 100% packet loss. Troubleshooting surfaced two independent, unrelated problems stacked on top of each other — a firewall-rule compilation issue on pfSense, and a default host-based firewall block on the Windows target. Neither was visible from the other's vantage point, which is the core lesson of this entry.
+
+ES: Una regla ICMP echo de WAN a LAN aparecía correctamente configurada y habilitada en la interfaz gráfica de pfSense, pero el tráfico de ping real desde Kali fallaba consistentemente con 100% de pérdida de paquetes. La investigación reveló dos problemas independientes y no relacionados, superpuestos entre sí: un problema de compilación de reglas en pfSense y un bloqueo predeterminado del firewall del host en el objetivo Windows. Ninguno era visible desde el punto de vista del otro, lo cual es la lección central de esta entrada.
+
+## Lab Topology Recap / Recapitulación de la topología
+
+| Zone / Zona | Interface | Network | Key Host |
+|---|---|---|---|
+| WAN | vtnet0 | 10.10.0.0/24 | Kali — 10.10.0.10 |
+| LAN | vtnet1 | 192.168.200.0/24 | Win11Lab — 192.168.200.40 |
+
+## Finding 1: pfSense WAN Rule Compilation Gap
+## Hallazgo 1: Falla de compilación de regla WAN en pfSense
+
+### Issue / Problema
+
+`ping -c4 192.168.200.40` from Kali returned 100% packet loss. The WAN-tab firewall rule permitting ICMP echo-request from 10.10.0.10 to the LAN subnet showed as enabled in the rules list, with a green check and no visible errors.
+
+ES: `ping -c4 192.168.200.40` desde Kali devolvía 100% de pérdida de paquetes. La regla de firewall en la pestaña WAN que permitía ICMP echo-request desde 10.10.0.10 hacia la subred LAN se mostraba habilitada en la lista de reglas, con una marca verde y sin errores visibles.
+
+### Diagnostic Process / Proceso de diagnóstico
+
+1. Ruled out RFC1918/bogon blocking on the WAN interface (`Interfaces > WAN > Reserved Networks` — both boxes unchecked).
+2. Confirmed Kali-side routing and layer-2 resolution were healthy: `ip route` showed a correct default route via 10.10.0.1, and `ip neigh show` showed the gateway MAC as `REACHABLE`.
+3. Checked `Status > Interfaces` and found WAN's **in/out packets (block)** counter incrementing on every ping attempt (1043 blocked vs. 18 passed) — meaning packets *were* arriving at the NIC but being actively dropped by pf, not lost at the network layer.
+4. Ruled out Floating rules (`Firewall > Rules > Floating` — none defined).
+5. Read `Status > System Logs > Firewall` directly and found the exact drop, timestamped against a live ping attempt:
+   ```
+   Aug 4 20:48:04  WAN  Default deny rule IPv4 (1000000103)  10.10.0.10 → 192.168.200.40  ICMP
+   ```
+6. Confirmed via console: `pfctl -sr | grep -i "10.10.0.10"` showed the RDP and DVWA WAN rules compiled correctly, but the ICMP echo rule was **entirely absent** from the compiled ruleset — despite being visible and enabled in the GUI.
+
+ES:
+1. Se descartó el bloqueo de redes RFC1918/bogon en la interfaz WAN (`Interfaces > WAN > Reserved Networks`, ambas casillas desmarcadas).
+2. Se confirmó que el enrutamiento y la resolución de capa 2 en Kali eran correctos: `ip route` mostraba una ruta predeterminada correcta vía 10.10.0.1, y `ip neigh show` mostraba la MAC del gateway como `REACHABLE`.
+3. Se revisó `Status > Interfaces` y se encontró que el contador **in/out packets (block)** de WAN aumentaba con cada intento de ping (1043 bloqueados frente a 18 permitidos), lo que indicaba que los paquetes **sí llegaban** a la NIC pero eran descartados activamente por pf, no perdidos en la capa de red.
+4. Se descartaron las reglas Floating (`Firewall > Rules > Floating`, ninguna definida).
+5. Se revisó directamente `Status > System Logs > Firewall` y se encontró el descarte exacto, con marca de tiempo coincidente con un intento de ping en vivo:
+   ```
+   Aug 4 20:48:04  WAN  Default deny rule IPv4 (1000000103)  10.10.0.10 → 192.168.200.40  ICMP
+   ```
+6. Se confirmó por consola: `pfctl -sr | grep -i "10.10.0.10"` mostró las reglas WAN de RDP y DVWA compiladas correctamente, pero la regla ICMP echo estaba **completamente ausente** del conjunto de reglas compilado, a pesar de estar visible y habilitada en la interfaz gráfica.
+
+### Root Cause / Causa raíz
+
+The GUI rule list did not reliably reflect the compiled (active) ruleset. `pfctl -sr` is the only authoritative source for what pf is actually enforcing at any given moment.
+
+ES: La lista de reglas de la interfaz gráfica no reflejaba de forma confiable el conjunto de reglas compilado (activo). `pfctl -sr` es la única fuente autorizada de lo que pf realmente está aplicando en un momento dado.
+
+### Resolution / Resolución
+
+Deleted and re-created the WAN ICMP rule, then re-verified against `pfctl -sr`. Confirmed compiled and active:
+```
+pass in quick on vtnet0 inet proto icmp from 10.10.0.10 to 192.168.200.40 icmp-type echoreq keep state (if-bound) label "USER_RULE" label "id:1785878593" ridentifier 1785878593
+```
+Destination was deliberately scoped to the single active target (192.168.200.40) rather than the full /24, to keep the firewall log signal focused on current pentest activity. Widening to the subnet (or adding a second scoped rule) is a one-line change when DC01 or other LAN hosts enter scope.
+
+A separate no-op rule on the LAN tab (Tracking ID 1785875459 — ICMP from 10.10.0.10 on the LAN interface, which can never match since that source physically cannot arrive on that interface) was identified as leftover clutter and flagged for deletion.
+
+ES: Se eliminó y volvió a crear la regla ICMP de WAN, y se verificó nuevamente contra `pfctl -sr`. Se confirmó que estaba compilada y activa (ver bloque de código arriba). El destino se limitó deliberadamente al objetivo activo único (192.168.200.40) en lugar de todo el /24, para mantener el registro del firewall enfocado en la actividad actual del pentest. Ampliarlo a la subred (o agregar una segunda regla con alcance específico) es un cambio de una línea cuando DC01 u otros hosts LAN entren en alcance.
+
+Se identificó una regla superflua en la pestaña LAN (ID de seguimiento 1785875459 — ICMP desde 10.10.0.10 en la interfaz LAN, que nunca puede coincidir porque ese origen no puede llegar físicamente a esa interfaz) como residuo a eliminar.
+
+## Finding 2: Windows Defender Firewall ICMP Block
+## Hallazgo 2: Bloqueo de ICMP por Windows Defender Firewall
+
+| | EN | ES |
+|---|---|---|
+| **Attack / Ataque** | ICMP echo-request (ping) host-discovery probe from Kali to Win11Lab, now correctly passed through pfSense. | Sondeo de descubrimiento de host mediante ICMP echo-request (ping) desde Kali hacia Win11Lab, ya correctamente permitido por pfSense. |
+| **Defender Signal / Señal del defensor** | Windows Defender Firewall's default inbound rule set silently dropped ICMPv4 Echo Requests. No TCP-style reset, no ICMP unreachable — just silence, indistinguishable at first glance from an upstream network drop. | El conjunto de reglas entrantes predeterminado de Windows Defender Firewall descartaba silenciosamente las solicitudes ICMPv4 Echo. Sin reset tipo TCP, sin ICMP inalcanzable — solo silencio, indistinguible a primera vista de un descarte en la red. |
+| **Mitigation Control / Control de mitigación** | Explicit inbound allow rule added via PowerShell: `New-NetFirewallRule -Name "Allow_Ping" -DisplayName "Allow ICMPv4-In (Ping)" -Protocol ICMPv4 -IcmpType 8 -Action Allow -Enabled True` | Regla de entrada explícita agregada vía PowerShell: `New-NetFirewallRule -Name "Allow_Ping" -DisplayName "Allow ICMPv4-In (Ping)" -Protocol ICMPv4 -IcmpType 8 -Action Allow -Enabled True` |
+
+### Evidence / Evidencia
+
+Packet capture on Kali's own interface was the deciding evidence — not pfSense's logs, since pf had nothing left to log once the packet was correctly passed.
+
+`fail_ping.pcap` — before the Windows Firewall fix:
+```
+4x Echo (ping) request, 10.10.0.10 → 192.168.200.40, ttl=64
+0x replies
+```
+
+`PingSuccess.pcapng` — after the fix:
+```
+10.10.0.10 → 192.168.200.40   type=8 (echo request)   ttl=64
+192.168.200.40 → 10.10.0.10   type=0 (echo reply)     ttl=127
+```
+(x4, symmetric request/reply pairs, sub-millisecond turnaround)
+
+ES: La captura de paquetes en la propia interfaz de Kali fue la evidencia decisiva, no los registros de pfSense, ya que pf no tenía nada más que registrar una vez que el paquete se permitió correctamente. (Ver bloques de código arriba.)
+
+## Lessons Learned / Lecciones aprendidas
+
+- **The GUI is not ground truth.** `pfctl -sr` is the only reliable way to confirm what pfSense is actually enforcing, independent of what the web interface displays.
+- **Firewall logs only show what that firewall did.** Once pfSense correctly passes a packet, it has nothing further to log — a silent drop further down the path (in this case, the destination host itself) is invisible from pfSense's perspective no matter how thoroughly its logs are read.
+- **Packet capture at the source is the tiebreaker.** Comparing request-sent vs. reply-received on Kali's own interface was the only vantage point that could distinguish "somewhere in the network path" from "the destination host itself" as the cause of silence.
+- **ICMP has no failure signal.** Unlike TCP (RST) or some UDP cases (ICMP port-unreachable), a dropped ICMP echo request just produces silence — making source-side capture the default diagnostic step for any "ping just doesn't work" case, not a last resort.
+
+ES: - **La interfaz gráfica no es la verdad absoluta.** `pfctl -sr` es la única forma confiable de confirmar lo que pfSense realmente está aplicando, independientemente de lo que muestre la interfaz web.
+- **Los registros del firewall solo muestran lo que ese firewall hizo.** Una vez que pfSense permite correctamente un paquete, no tiene nada más que registrar; un descarte silencioso más adelante en la ruta (en este caso, el propio host de destino) es invisible desde la perspectiva de pfSense sin importar cuán a fondo se lean sus registros.
+- **La captura de paquetes en el origen es el desempate.** Comparar solicitudes enviadas frente a respuestas recibidas en la propia interfaz de Kali fue el único punto de vista capaz de distinguir "en algún punto de la red" de "el propio host de destino" como causa del silencio.
+- **ICMP no tiene señal de fallo.** A diferencia de TCP (RST) o algunos casos de UDP (ICMP puerto inalcanzable), una solicitud ICMP echo descartada simplemente produce silencio, lo que convierte la captura desde el origen en el paso de diagnóstico predeterminado para cualquier caso de "el ping simplemente no funciona", no en un último recurso.
+
+## Appendix: Commands Used / Apéndice: Comandos utilizados
+
+```bash
+# Kali — routing / ARP verification
+ip route
+ip neigh show
+ping -c4 192.168.200.40
+
+# pfSense console — compiled ruleset inspection
+pfctl -sr | grep -i "10.10.0.10"
+
+# Windows — allow inbound ICMPv4 echo
+New-NetFirewallRule -Name "Allow_Ping" -DisplayName "Allow ICMPv4-In (Ping)" `
+  -Protocol ICMPv4 -IcmpType 8 -Action Allow -Enabled True
+```
+
+## Suggested Commit Message / Mensaje de commit sugerido
+
+```
+docs(home-lab): WAN-LAN ICMP troubleshooting — pfSense rule compilation gap + Windows Firewall block
+
+- pfctl -sr revealed WAN ICMP rule missing from compiled ruleset despite GUI showing enabled
+- packet capture on Kali isolated a second, unrelated block: Windows Defender Firewall dropping ICMPv4-In by default
+- resolved both; documented methodology (GUI != ground truth, source-side capture as tiebreaker)
+```
+
 
