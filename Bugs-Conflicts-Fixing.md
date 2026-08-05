@@ -272,7 +272,7 @@ ES: *El diagnóstico avanzó capa por capa, tanto en Fedora como en pfSense: ree
 
 That's why every fix so far was necessary but not sufficient: `ip_forward=1`, `masquerade=yes`, and a correct pfSense default gateway all had to be true for the packet to even reach the point of being forwarded — but libvirt's own isolation rule for `virbr1` rejects it regardless, by design, since "isolated" is meant to guarantee exactly that.
 
-*(`virbr1` está definido en libvirt como una red de tipo **Isolated**. Según el modelo de firewall propio de libvirt, las redes aisladas reciben cadenas dedicadas de iptables/nftables que rechazan explícitamente — con `reject-with icmp-port-unreachable`, coincidiendo exactamente con lo observado — cualquier tráfico reenviado entre ese puente y cualquier otra interfaz. Este bloqueo es independiente de la configuración de zona de firewalld y tiene prioridad sobre ella. Por eso cada corrección anterior era necesaria pero no suficiente: libvirt rechaza el reenvío por diseño, ya que "aislada" está pensado para garantizar justamente eso.)*
+ES: *`virbr1` está definido en libvirt como una red de tipo **Isolated**. Según el modelo de firewall propio de libvirt, las redes aisladas reciben cadenas dedicadas de iptables/nftables que rechazan explícitamente — con `reject-with icmp-port-unreachable`, coincidiendo exactamente con lo observado — cualquier tráfico reenviado entre ese puente y cualquier otra interfaz. Este bloqueo es independiente de la configuración de zona de firewalld y tiene prioridad sobre ella. Por eso cada corrección anterior era necesaria pero no suficiente: libvirt rechaza el reenvío por diseño, ya que "aislada" está pensado para garantizar justamente eso.*
 
 ---
 
@@ -280,7 +280,7 @@ That's why every fix so far was necessary but not sufficient: `ip_forward=1`, `m
 
 Resolving this means changing how libvirt treats `virbr1`'s forwarding — either altering the network's `<forward>` mode, or inserting an explicit allow ahead of libvirt's own `REJECT` rules — without breaking the deliberate design where **pfSense**, not libvirt, is the router for this topology. This has not been attempted yet.
 
-*(Resolver esto implica cambiar cómo libvirt trata el reenvío de `virbr1` — ya sea alterando el modo `<forward>` de la red, o insertando una regla de permiso explícita antes de las reglas REJECT propias de libvirt — sin romper el diseño deliberado donde pfSense, no libvirt, es el enrutador de esta topología. Esto aún no se ha intentado.)*
+ES: *Resolver esto implica cambiar cómo libvirt trata el reenvío de `virbr1` — ya sea alterando el modo `<forward>` de la red, o insertando una regla de permiso explícita antes de las reglas REJECT propias de libvirt — sin romper el diseño deliberado donde pfSense, no libvirt, es el enrutador de esta topología. Esto aún no se ha intentado.*
 
 
 **Update the status line at the top of this entry to: `Status: Resolved (2026-08-02)`.**
@@ -289,7 +289,7 @@ Resolving this means changing how libvirt treats `virbr1`'s forwarding — eithe
 
 The remaining blocker wasn't libvirt's *isolation* enforcement as first suspected — it was simpler and more specific: `LAN_Zone`'s libvirt network was defined with `<forward mode='open'/>`. In this mode libvirt deliberately does **not** insert its own iptables/masquerade rules, on the assumption the admin will manage forwarding manually. That's exactly what left Fedora's forwarding half-configured even after `ip_forward=1` and firewalld's `masquerade` were both correctly set. Fix: switched the network to `<forward mode='nat'/>` and cycled it (`virsh net-destroy LAN_Zone && virsh net-start LAN_Zone`), so libvirt now manages NAT/masquerade for that bridge automatically (running alongside the firewalld masquerade rule added earlier — redundant on the same traffic, not conflicting).
 
-*(El bloqueo restante no era la aplicación de aislamiento de libvirt como se sospechó al inicio — era más simple y específico: la red `LAN_Zone` estaba definida con `<forward mode='open'/>`, modo en el que libvirt deliberadamente no inserta sus propias reglas de iptables/masquerade. Se corrigió cambiando el modo a `nat` y reiniciando la red.)*
+ES: *El bloqueo restante no era la aplicación de aislamiento de libvirt como se sospechó al inicio — era más simple y específico: la red `LAN_Zone` estaba definida con `<forward mode='open'/>`, modo en el que libvirt deliberadamente no inserta sus propias reglas de iptables/masquerade. Se corrigió cambiando el modo a `nat` y reiniciando la red.*
 
 At the same time, two more pieces were required together before the path fully worked:
 
@@ -298,7 +298,7 @@ At the same time, two more pieces were required together before the path fully w
 
 With libvirt's NAT mode, the MGMT rule, and the Outbound NAT mapping all in place together, both `pfSense → 8.8.8.8` and `Wazuh → 8.8.8.8` pings confirmed 0% packet loss.
 
-*(Al mismo tiempo, se necesitaron dos piezas más junto con lo anterior: la regla de MGMT ampliada temporalmente para pruebas, y el NAT de salida en modo Hybrid con la traducción hacia la dirección de LAN. Con las tres piezas juntas, las pruebas de ping confirmaron 0% de pérdida de paquetes.)*
+ES: *Al mismo tiempo, se necesitaron dos piezas más junto con lo anterior: la regla de MGMT ampliada temporalmente para pruebas, y el NAT de salida en modo Hybrid con la traducción hacia la dirección de LAN. Con las tres piezas juntas, las pruebas de ping confirmaron 0% de pérdida de paquetes.*
 
 **DNS — the actual cause wasn't Unbound's ACL.** A `MGMT_Allow` access list already existed and was correctly configured; the REFUSED-style symptom was actually the query never leaving Wazuh at all. `resolvectl status` showed `Current Scopes: none` on `enp1s0` — systemd-resolved had no nameserver assigned, and netplan's `00-installer-config.yaml` had no `nameservers:` block to begin with. Fixed by adding:
 
@@ -309,7 +309,7 @@ nameservers:
 
 and running `netplan apply`. Confirmed persistent (sourced from the config file, not a runtime-only `resolvectl` override).
 
-*(DNS — la causa real no era la lista de acceso de Unbound, que ya estaba bien configurada. La consulta nunca salía de Wazuh: systemd-resolved no tenía servidor de nombres asignado, ya que el archivo netplan no incluía el bloque `nameservers`. Se corrigió agregando ese bloque y aplicando `netplan apply`, confirmado como persistente.)*
+ES: *DNS — la causa real no era la lista de acceso de Unbound, que ya estaba bien configurada. La consulta nunca salía de Wazuh: systemd-resolved no tenía servidor de nombres asignado, ya que el archivo netplan no incluía el bloque `nameservers`. Se corrigió agregando ese bloque y aplicando `netplan apply`, confirmado como persistente.*
 
 **Final MGMT ruleset**, locked down from the wide-open testing rule to three least-privilege rules:
 
@@ -321,7 +321,7 @@ and running `netplan apply`. Confirmed persistent (sourced from the config file,
 
 Rule 2 originally selected **Echo Reply** instead of **Echo Request** — an easy mix-up, since pfSense lists them adjacently in the subtype picker. Since pfSense is stateful, only the request direction needed an explicit rule; the reply is auto-permitted via the state table once corrected.
 
-*(Regla final de MGMT: tres reglas de privilegio mínimo — DNS hacia el resolutor de pfSense, ICMP Echo Request para diagnóstico, y TCP/443 hacia el alias de las APIs de IA. La regla ICMP inicialmente tenía seleccionado "Echo Reply" en vez de "Echo Request" por error — al ser pfSense un firewall con estado, solo la solicitud necesitaba regla explícita.)*
+ES: *Regla final de MGMT: tres reglas de privilegio mínimo — DNS hacia el resolutor de pfSense, ICMP Echo Request para diagnóstico, y TCP/443 hacia el alias de las APIs de IA. La regla ICMP inicialmente tenía seleccionado "Echo Reply" en vez de "Echo Request" por error — al ser pfSense un firewall con estado, solo la solicitud necesitaba regla explícita.)*
 
 Final verification — `resolvectl query`, `nc -zv <host> 443` for both Groq and Gemini, and `ping -c3 8.8.8.8` — all succeeded from Wazuh through the locked-down ruleset.
 
@@ -331,5 +331,5 @@ Final verification — `resolvectl query`, `nc -zv <host> 443` for both Groq and
 
 Gemini's API sits behind Google's anycast infrastructure with many rotating addresses. pfSense's FQDN-type alias only re-resolves periodically and caches a small snapshot, while Wazuh's own DNS queries can return a different IP each time. This produces intermittent blocked connections to Gemini specifically — visible in the firewall log as legitimate TCP SYNs to shifting `172.217.x.x` addresses hitting default-deny, not a misconfiguration. Documented as an accepted risk rather than something to chase further. If it becomes a practical problem, options are: a shorter alias re-resolution interval, a broader IP-range allow (trades away some least-privilege precision), or relying on AiSOC's own retry logic to absorb occasional failures.
 
-*(La API de Gemini está detrás de infraestructura anycast de Google con muchas direcciones rotativas. El alias de pfSense se re-resuelve periódicamente pero con una instantánea pequeña, mientras que las consultas DNS de Wazuh pueden devolver una IP distinta cada vez. Esto produce bloqueos intermitentes hacia Gemini específicamente — no es un error de configuración, sino un límite estructural. Se documenta como riesgo aceptado en vez de algo a resolver más a fondo.)*
+ES: *La API de Gemini está detrás de infraestructura anycast de Google con muchas direcciones rotativas. El alias de pfSense se re-resuelve periódicamente pero con una instantánea pequeña, mientras que las consultas DNS de Wazuh pueden devolver una IP distinta cada vez. Esto produce bloqueos intermitentes hacia Gemini específicamente — no es un error de configuración, sino un límite estructural. Se documenta como riesgo aceptado en vez de algo a resolver más a fondo.*
 
