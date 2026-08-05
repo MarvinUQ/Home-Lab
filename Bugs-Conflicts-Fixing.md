@@ -240,6 +240,9 @@ Diagnosis proceeded layer by layer, on both Fedora and pfSense:
    ```
    Confirmed `masquerade: yes` afterward.
 4. **Retest (pfSense Diagnostics > Ping, source LAN, target `8.8.8.8`)** — still 100% packet loss, no reply at all. Masquerade alone wasn't enough.
+
+<img src="Images/AI-Int-Con01.png" alt="AI-Int-Con01" width="70%">
+   
 5. **pfSense gateway check (System > Routing > Gateways)** — no IPv4 gateway existed on LAN at all; only IPv6 DHCP gateways plus an unused `WAN_DHCP` (IPv4), with `Default gateway IPv4` set to `Automatic`. Since WAN never gets a real DHCP lease (it's the isolated zone), "Automatic" was effectively resolving to nothing.
 
 <img src="Images/AI-Int-Con02.png" alt="AI-Int-Con02" width="70%">
@@ -255,7 +258,7 @@ Diagnosis proceeded layer by layer, on both Fedora and pfSense:
 
 <img src="Images/AI-Int-Con05.png" alt="AI-Int-Con05" width="70%">
    
-9. **Retest** — packet loss changed character: instead of silent 100% loss, pfSense now received an explicit reply on all 3 pings — **"Destination Port Unreachable" from `192.168.200.254`** (Fedora's own bridge address). This is meaningful: the packet is now actually reaching Fedora and being actively rejected, rather than getting lost with no route.
+8. **Retest** — packet loss changed character: instead of silent 100% loss, pfSense now received an explicit reply on all 3 pings — **"Destination Port Unreachable" from `192.168.200.254`** (Fedora's own bridge address). This is meaningful: the packet is now actually reaching Fedora and being actively rejected, rather than getting lost with no route.
 
 ES: *El diagnóstico avanzó capa por capa, tanto en Fedora como en pfSense: reenvío de paquetes ya activo, masquerade faltante y luego corregido, sin gateway IPv4 en LAN, corrección sobre el uso incorrecto de una ruta estática 0.0.0.0/0 — en pfSense el gateway por defecto solo se configura desde Gateways, no desde Rutas Estáticas — y finalmente la adición de un gateway real en LAN apuntando al puente de Fedora. La prueba pasó de pérdida silenciosa de paquetes a una respuesta explícita de "Destination Port Unreachable" desde la propia dirección de Fedora, señal de que el paquete ya llega pero es rechazado activamente.*
 
