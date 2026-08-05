@@ -315,11 +315,11 @@ ES: *DNS — la causa real no era la lista de acceso de Unbound, que ya estaba b
 
 Rule 2 originally selected **Echo Reply** instead of **Echo Request** — an easy mix-up, since pfSense lists them adjacently in the subtype picker. Since pfSense is stateful, only the request direction needed an explicit rule; the reply is auto-permitted via the state table once corrected.
 
-ES: *Regla final de MGMT: tres reglas de privilegio mínimo — DNS hacia el resolutor de pfSense, ICMP Echo Request para diagnóstico, y TCP/443 hacia el alias de las APIs de IA. La regla ICMP inicialmente tenía seleccionado "Echo Reply" en vez de "Echo Request" por error — al ser pfSense un firewall con estado, solo la solicitud necesitaba regla explícita.)*
+ES: *Regla final de MGMT: tres reglas de privilegio mínimo — DNS hacia el resolutor de pfSense, ICMP Echo Request para diagnóstico, y TCP/443 hacia el alias de las APIs de IA. La regla ICMP inicialmente tenía seleccionado "Echo Reply" en vez de "Echo Request" por error — al ser pfSense un firewall con estado, solo la solicitud necesitaba regla explícita.*
+
+<img src="Images/AI-Int-Con29.png" alt="AI-Int-Con29" width="70%">
 
 Final verification — `resolvectl query`, `nc -zv <host> 443` for both Groq and Gemini, and `ping -c3 8.8.8.8` — all succeeded from Wazuh through the locked-down ruleset.
-
----
 
 ### Known accepted limitation (Limitación aceptada conocida)
 
