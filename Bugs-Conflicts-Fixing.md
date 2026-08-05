@@ -22,11 +22,11 @@ ES:  Cuatro redes separadas, cada una con distintos niveles de confianza, todas 
 
 - **Testing connection between MGMT and LAN, and between MGMT and DMZ**
 
+   Windows to Ubuntu-Wazuh ports 443, 1514 and 1515: Working properly.
+
 ES: **Probando la conexión entre MGMT y LAN, y entre MGMT y DMZ**
 
-  Windows to Ubuntu-Wazuh ports 443, 1514 and 1515: Working properly.
-
-ES:  De Windows a Ubuntu-Wazuh los puertos 443, 1514 y 1515: Funcionando apropiadamente
+De Windows a Ubuntu-Wazuh los puertos 443, 1514 y 1515: Funcionando apropiadamente
 
 <img src="Images/dmz-04.png" alt="dmz-04" width="70%">
 
@@ -75,11 +75,11 @@ ES:  Después de reiniciar nuevamente al probar la conexión desde Debian-DVWA a
 
   Both ping tests were successful, with 0% packet loss.
 
-  ES: En ambas pruebas el ping fue exitoso, 0% de pérdida de paquetes.
-
   The next diagnostic tool was the ARP table, looking for discrepancies or anomalies.
 
-  ES: La siguiente herramienta de diagnóstico era la tabla ARP, para buscar discrepancias o anomalías.
+ES: En ambas pruebas el ping fue exitoso, 0% de pérdida de paquetes.
+
+La siguiente herramienta de diagnóstico era la tabla ARP, para buscar discrepancias o anomalías.
 
 <img src="Images/dmz-12.png" alt="dmz-12" width="70%">
 
