@@ -22,7 +22,7 @@ ES:  Cuatro redes separadas, cada una con distintos niveles de confianza, todas 
 
 - **Testing connection between MGMT and LAN, and between MGMT and DMZ**
 
-  **(Probando la conexión entre MGMT y LAN, y entre MGMT y DMZ)**
+ES: **Probando la conexión entre MGMT y LAN, y entre MGMT y DMZ**
 
   Windows to Ubuntu-Wazuh ports 443, 1514 and 1515: Working properly.
 
