@@ -327,7 +327,7 @@ ES: *La API de Gemini está detrás de infraestructura anycast de Google con muc
 
 ---
 
-# **WAN → LAN ICMP Connectivity Troubleshooting (Solución de problemas de conectividad ICMP WAN → LAN)**
+# **WAN ->LAN ICMP Connectivity Troubleshooting (Solución de problemas de conectividad ICMP WAN -> LAN)**
 
 **Date / Fecha:** 2026-08-04
 **Lab zone / Zona del laboratorio:** WAN (10.10.0.0/24) → LAN (192.168.200.0/24)
