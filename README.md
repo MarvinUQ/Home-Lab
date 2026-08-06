@@ -40,4 +40,4 @@ ____
 
 -[Wazuh MGMT zone has no internet path: AiSOC calls to Gemini/Groq fail. (Zona MGMT de Wazuh sin acceso a internet: las llamadas de AiSOC a Gemini/Groq fallan)](Bugs-Conflicts-Fixing.md#**Wazuh-MGMT-zone-has-no-internet-path:-AiSOC-calls-to-Gemini/Groq-fail.-(Zona-MGMT-de-Wazuh-sin-acceso-a-internet:-las-llamadas-de-AiSOC-a-Gemini/Groq-fallan)**)
 
--[WAN -> LAN ICMP Connectivity Troubleshooting (Solución de problemas de conectividad ICMP WAN -> LAN)](Bugs-Conflicts-Fixing.md#**WAN-->-LAN-ICMP-Connectivity-Troubleshooting-(Solución-de-problemas-de-conectividad-ICMP-WAN-->-LAN)**)
+-[WAN -> LAN ICMP Connectivity Troubleshooting (Solución de problemas de conectividad ICMP WAN -> LAN)](Bugs-Conflicts-Fixing.md#-**WAN-->-LAN-ICMP-Connectivity-Troubleshooting-(Solución-de-problemas-de-conectividad-ICMP-WAN-->-LAN)**)
