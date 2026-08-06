@@ -36,6 +36,5 @@ ____
 
 ## [-Bugs, Conflicts and Fixes. (Errores, COnflictos y Arreglos)](https://github.com/MarvinUQ/Home-Lab/blob/main/Bugs-Conflicts-Fixing.md)
 
-[The DMZ <--> MGMT connection conflict. (Conflicto de comunicación DMZ <--> MGMT.)](Bugs-Conflicts-Fixing.md#**The DMZ <--> MGMT connection conflict. (Conflicto de comunicación DMZ <--> MGMT.)**
-)
+[The DMZ <--> MGMT connection conflict. (Conflicto de comunicación DMZ <--> MGMT.)](Bugs-Conflicts-Fixing.md#**The-DMZ-<-->-MGMT-connection-conflict.-(Conflicto-de-comunicación-DMZ-<-->-MGMT.)**)
 
