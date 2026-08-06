@@ -457,15 +457,3 @@ pfctl -sr | grep -i "10.10.0.10"
 New-NetFirewallRule -Name "Allow_Ping" -DisplayName "Allow ICMPv4-In (Ping)" `
   -Protocol ICMPv4 -IcmpType 8 -Action Allow -Enabled True
 ```
-
-## Suggested Commit Message / Mensaje de commit sugerido
-
-```
-docs(home-lab): WAN-LAN ICMP troubleshooting — pfSense rule compilation gap + Windows Firewall block
-
-- pfctl -sr revealed WAN ICMP rule missing from compiled ruleset despite GUI showing enabled
-- packet capture on Kali isolated a second, unrelated block: Windows Defender Firewall dropping ICMPv4-In by default
-- resolved both; documented methodology (GUI != ground truth, source-side capture as tiebreaker)
-```
-
-
