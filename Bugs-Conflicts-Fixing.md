@@ -1,4 +1,4 @@
-## **The DMZ <--> MGMT connection conflict. (Conflicto de comunicación DMZ <--> MGMT.)**
+# **The DMZ <--> MGMT connection conflict. (Conflicto de comunicación DMZ <--> MGMT.)**
 
 - pfSense up and running
 
@@ -196,7 +196,7 @@ respondedor duplicado de Capa 2 — fue trabajo independiente.
 
 ---
 
-## **Wazuh MGMT zone has no internet path: AiSOC calls to Gemini/Groq fail. (Zona MGMT de Wazuh sin acceso a internet: las llamadas de AiSOC a Gemini/Groq fallan)**
+# **Wazuh MGMT zone has no internet path: AiSOC calls to Gemini/Groq fail. (Zona MGMT de Wazuh sin acceso a internet: las llamadas de AiSOC a Gemini/Groq fallan)**
 
 ### Problem (Problema)
 
@@ -327,8 +327,7 @@ ES: *La API de Gemini está detrás de infraestructura anycast de Google con muc
 
 ---
 
-# WAN → LAN ICMP Connectivity Troubleshooting
-# Solución de problemas de conectividad ICMP WAN → LAN
+# **WAN → LAN ICMP Connectivity Troubleshooting (Solución de problemas de conectividad ICMP WAN → LAN)**
 
 **Date / Fecha:** 2026-08-04
 **Lab zone / Zona del laboratorio:** WAN (10.10.0.0/24) → LAN (192.168.200.0/24)
