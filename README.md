@@ -36,5 +36,6 @@ ____
 
 ## [-Bugs, Conflicts and Fixes. (Errores, COnflictos y Arreglos)](https://github.com/MarvinUQ/Home-Lab/blob/main/Bugs-Conflicts-Fixing.md)
 
-[The DMZ <--> MGMT connection conflict. (Conflicto de comunicación DMZ <--> MGMT.)](Bugs-Conflicts-Fixing.md#**The-DMZ-<-->-MGMT-connection-conflict.-(Conflicto-de-comunicación-DMZ-<-->-MGMT.)**)
+-[The DMZ <--> MGMT connection conflict. (Conflicto de comunicación DMZ <--> MGMT.)](Bugs-Conflicts-Fixing.md#**The-DMZ-<-->-MGMT-connection-conflict.-(Conflicto-de-comunicación-DMZ-<-->-MGMT.)**)
 
+-[Wazuh MGMT zone has no internet path — AiSOC calls to Gemini/Groq fail.(Zona MGMT de Wazuh sin acceso a internet — las llamadas de AiSOC a Gemini/Groq fallan)](Bugs-Conflicts-Fixing.md#Wazuh-MGMT-zone has-no-internet-path-—-AiSOC-calls-to-Gemini/Groq-fail.(Zona-MGMT-de-Wazuh-sin-acceso-a-internet-—-las-llamadas-de-AiSOC-a-Gemini/Groq-fallan))
