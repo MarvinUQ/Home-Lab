@@ -196,7 +196,7 @@ respondedor duplicado de Capa 2 — fue trabajo independiente.
 
 ---
 
-## **Wazuh MGMT zone has no internet path — AiSOC calls to Gemini/Groq fail.(Zona MGMT de Wazuh sin acceso a internet — las llamadas de AiSOC a Gemini/Groq fallan)**
+## **Wazuh MGMT zone has no internet path—AiSOC calls to Gemini/Groq fail.(Zona MGMT de Wazuh sin acceso a internet—las llamadas de AiSOC a Gemini/Groq fallan)**
 
 ### Problem (Problema)
 
