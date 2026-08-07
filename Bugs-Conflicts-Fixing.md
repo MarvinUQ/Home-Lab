@@ -415,7 +415,7 @@ Se identificó una regla superflua en la pestaña LAN (ID de seguimiento 1785875
 
 Packet capture on Kali's own interface was the deciding evidence — not pfSense's logs, since pf had nothing left to log once the packet was correctly passed.
 
-`fail_ping.pcap` — before the Windows Firewall fix:
+`PingFail.pcap` — before the Windows Firewall fix:
 ```
 4x Echo (ping) request, 10.10.0.10 → 192.168.200.40, ttl=64
 0x replies
