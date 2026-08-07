@@ -421,11 +421,17 @@ Packet capture on Kali's own interface was the deciding evidence — not pfSense
 0x replies
 ```
 
+<img src="Images/Images/PingICMPFail01.png" alt="PingICMPFail01.png" width="70%">
+
 `PingSuccess.pcapng` — after the fix:
 ```
 10.10.0.10 → 192.168.200.40   type=8 (echo request)   ttl=64
 192.168.200.40 → 10.10.0.10   type=0 (echo reply)     ttl=127
 ```
+
+
+<img src="Images/Images/PingICMPFail02.png" alt="PingICMPFail02.png" width="70%">
+
 (x4, symmetric request/reply pairs, sub-millisecond turnaround)
 
 ES: La captura de paquetes en la propia interfaz de Kali fue la evidencia decisiva, no los registros de pfSense, ya que pf no tenía nada más que registrar una vez que el paquete se permitió correctamente. (Ver bloques de código arriba.)
