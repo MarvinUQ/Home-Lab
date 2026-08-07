@@ -421,7 +421,7 @@ Packet capture on Kali's own interface was the deciding evidence — not pfSense
 0x replies
 ```
 
-<img src="Images/Images/PingICMPFail01.png" alt="PingICMPFail01.png" width="70%">
+<img src="Images/PingICMPFail01.png" alt="PingICMPFail01.png" width="70%">
 
 `PingSuccess.pcapng` — after the fix:
 ```
@@ -430,7 +430,7 @@ Packet capture on Kali's own interface was the deciding evidence — not pfSense
 ```
 
 
-<img src="Images/Images/PingICMPFail02.png" alt="PingICMPFail02.png" width="70%">
+<img src="Images/PingICMPFail02.png" alt="PingICMPFail02.png" width="70%">
 
 (x4, symmetric request/reply pairs, sub-millisecond turnaround)
 
