@@ -364,9 +364,18 @@ ES: `ping -c4 192.168.200.40` desde Kali devolvía 100% de pérdida de paquetes.
 ### Diagnostic Process / Proceso de diagnóstico
 
 1. Ruled out RFC1918/bogon blocking on the WAN interface (`Interfaces > WAN > Reserved Networks` — both boxes unchecked).
+
+<img src="Images/PingICMPFail04.png" alt="PingICMPFail04.png" width="70%">
+
 2. Confirmed Kali-side routing and layer-2 resolution were healthy: `ip route` showed a correct default route via 10.10.0.1, and `ip neigh show` showed the gateway MAC as `REACHABLE`.
+
+<img src="Images/PingICMPFail10.png" alt="PingICMPFail10.png" width="70%">
+
 3. Checked `Status > Interfaces` and found WAN's **in/out packets (block)** counter incrementing on every ping attempt (1043 blocked vs. 18 passed) — meaning packets *were* arriving at the NIC but being actively dropped by pf, not lost at the network layer.
 4. Ruled out Floating rules (`Firewall > Rules > Floating` — none defined).
+
+<img src="Images/PingICMPFail04.png" alt="PingICMPFail04.png" width="70%">
+
 5. Read `Status > System Logs > Firewall` directly and found the exact drop, timestamped against a live ping attempt:
    ```
    Aug 4 20:48:04  WAN  Default deny rule IPv4 (1000000103)  10.10.0.10 → 192.168.200.40  ICMP
