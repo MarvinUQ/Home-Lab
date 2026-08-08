@@ -372,6 +372,9 @@ ES: `ping -c4 192.168.200.40` desde Kali devolvía 100% de pérdida de paquetes.
 <img src="Images/PingICMPFail10.png" alt="PingICMPFail10.png" width="70%">
 
 3. Checked `Status > Interfaces` and found WAN's **in/out packets (block)** counter incrementing on every ping attempt (1043 blocked vs. 18 passed) — meaning packets *were* arriving at the NIC but being actively dropped by pf, not lost at the network layer.
+
+<img src="Images/PingICMPFail12.png" alt="PingICMPFail12.png" width="70%">
+
 4. Ruled out Floating rules (`Firewall > Rules > Floating` — none defined).
 
 <img src="Images/PingICMPFail04.png" alt="PingICMPFail04.png" width="70%">
@@ -381,6 +384,8 @@ ES: `ping -c4 192.168.200.40` desde Kali devolvía 100% de pérdida de paquetes.
    Aug 4 20:48:04  WAN  Default deny rule IPv4 (1000000103)  10.10.0.10 → 192.168.200.40  ICMP
    ```
 6. Confirmed via console: `pfctl -sr | grep -i "10.10.0.10"` showed the RDP and DVWA WAN rules compiled correctly, but the ICMP echo rule was **entirely absent** from the compiled ruleset — despite being visible and enabled in the GUI.
+
+<img src="Images/PingICMPFail08.png" alt="PingICMPFail08.png" width="70%">
 
 ES:
 1. Se descartó el bloqueo de redes RFC1918/bogon en la interfaz WAN (`Interfaces > WAN > Reserved Networks`, ambas casillas desmarcadas).
@@ -421,6 +426,8 @@ Se identificó una regla superflua en la pestaña LAN (ID de seguimiento 1785875
 | **Attack / Ataque** | ICMP echo-request (ping) host-discovery probe from Kali to Win11Lab, now correctly passed through pfSense. | Sondeo de descubrimiento de host mediante ICMP echo-request (ping) desde Kali hacia Win11Lab, ya correctamente permitido por pfSense. |
 | **Defender Signal / Señal del defensor** | Windows Defender Firewall's default inbound rule set silently dropped ICMPv4 Echo Requests. No TCP-style reset, no ICMP unreachable — just silence, indistinguishable at first glance from an upstream network drop. | El conjunto de reglas entrantes predeterminado de Windows Defender Firewall descartaba silenciosamente las solicitudes ICMPv4 Echo. Sin reset tipo TCP, sin ICMP inalcanzable — solo silencio, indistinguible a primera vista de un descarte en la red. |
 | **Mitigation Control / Control de mitigación** | Explicit inbound allow rule added via PowerShell: `New-NetFirewallRule -Name "Allow_Ping" -DisplayName "Allow ICMPv4-In (Ping)" -Protocol ICMPv4 -IcmpType 8 -Action Allow -Enabled True` | Regla de entrada explícita agregada vía PowerShell: `New-NetFirewallRule -Name "Allow_Ping" -DisplayName "Allow ICMPv4-In (Ping)" -Protocol ICMPv4 -IcmpType 8 -Action Allow -Enabled True` |
+
+<img src="Images/PingICMPFail06.png" alt="PingICMPFail06.png" width="70%">
 
 ### Evidence / Evidencia
 
