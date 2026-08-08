@@ -343,6 +343,8 @@ A WAN-to-LAN ICMP echo rule appeared correctly configured and enabled in the pfS
 
 ES: Una regla ICMP echo de WAN a LAN aparecía correctamente configurada y habilitada en la interfaz gráfica de pfSense, pero el tráfico de ping real desde Kali fallaba consistentemente con 100% de pérdida de paquetes. La investigación reveló dos problemas independientes y no relacionados, superpuestos entre sí: un problema de compilación de reglas en pfSense y un bloqueo predeterminado del firewall del host en el objetivo Windows. Ninguno era visible desde el punto de vista del otro, lo cual es la lección central de esta entrada.
 
+<img src="Images/PingICMPFail00.png" alt="PingICMPFail00.png" width="70%">
+
 ## Lab Topology Recap / Recapitulación de la topología
 
 | Zone / Zona | Interface | Network | Key Host |
