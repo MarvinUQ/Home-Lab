@@ -1,4 +1,4 @@
-# -Learned
+# Learned
 
 ### - On ADDC Server behavior. (Comportamiento de servidor ADDC.)
 
@@ -10,4 +10,8 @@
 
 ____
 
-## Adding agentless monitoring on pfSense to Wazuh using Syslog. (Agregar monitoreo sin agentes a pfSense hacia Wazuh usando Syslog.)
+### Adding agentless monitoring on pfSense to Wazuh using Syslog. (Agregar monitoreo sin agentes a pfSense hacia Wazuh usando Syslog.)
+
+- The goal, since 
+
+ES: El objetivo, ya que esta forma de monitoreo se agrega a un laboratorio con redes en 4 zonas establecidas para replicar la funcionalidad de una red organizacional, con sus potenciales vulnerabilidades y el cual ademas ya cuenta con una regla de permiso de respuesta de ping entre Kali Linux en 10.10.0.10 (WAN) hacia Windows 11 Enterprise en 192.168.200.40 (LAN) para pruebas en caso de fallos, considero que agregar reglas que bloqueen la conexión ICMP desde Kali Linux hacia Ubuntu-Wazuh en 172.16.0.10 (MGMT) y hacia Microsoft Server DC01 en 192.168.200.10 (LAN) para poder implementar en Wazuh la recolección y monitorización de estos registros generados desde pfSense sin tener que instalar un agente, puede ser de gran utilidad para comprender mejor el funcionamiento y la implementación de ambas herramientas.
