@@ -32,7 +32,9 @@ ____
 
 These are some of the concepts and behaviors of operating systems and tools this project has taught me so far
 
-(Estos son algunos de los conceptos y comportamientos de los sistemas operativos y herramientas que he aprendido en este proyecto hasta el momento):
+(Estos son algunos de los conceptos y comportamientos de los sistemas operativos y herramientas que he aprendido en este proyecto hasta el momento)
+
+[Adding agentless monitoring on pfSense to Wazuh using Syslog. (Agregar monitoreo sin agentes a pfSense hacia Wazuh usando Syslog.)](Learning-and-Building#-Adding-agentless-monitoring-on-pfSense-to-Wazuh-using-Syslog---Agregar-monitoreo-sin-agentes-a-pfSense-hacia-Wazuh-usando-Syslog--)
 
 ____
 
