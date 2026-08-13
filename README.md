@@ -34,10 +34,9 @@ These are some of the concepts and behaviors of operating systems and tools this
 
 (Estos son algunos de los conceptos y comportamientos de los sistemas operativos y herramientas que he aprendido en este proyecto hasta el momento)
 
-[-Adding agentless monitoring on pfSense to Wazuh using Syslog. (Agregar monitoreo sin agentes a pfSense hacia Wazuh usando Syslog.)](Learning-and-Building.md#Adding-agentless-monitoring-on-pfSense-to-Wazuh-using-Syslog---Agregar-monitoreo-sin-agentes-a-pfSense-hacia-Wazuh-usando-Syslog--)
-____
+[-Adding agentless monitoring on pfSense to Wazuh using Syslog. (Agregar monitoreo sin agentes a pfSense hacia Wazuh usando Syslog.)](Learning%20and%20Building.md#adding-agentless-monitoring-on-pfsense-to-wazuh-using-syslog-agregar-monitoreo-sin-agentes-a-pfsense-hacia-wazuh-usando-syslog)
 
-## [-Bugs, Conflicts and Fixes. (Errores, Conflictos y Soluciones)](https://github.com/MarvinUQ/Home-Lab/blob/main/Bugs-Conflicts-Fixing.md)
+____
 
 -[The DMZ <--> MGMT connection conflict. (Conflicto de comunicación DMZ <--> MGMT.)](Bugs-Conflicts-Fixing.md#**The-DMZ-<-->-MGMT-connection-conflict.-(Conflicto-de-comunicación-DMZ-<-->-MGMT.)**)
 
