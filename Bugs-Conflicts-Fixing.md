@@ -2,7 +2,7 @@
 
 - pfSense up and running
 
-<img src="Images/dmz-01.png" alt="dmz-01" width="70%">
+<img src="images/dmz-01.png" alt="dmz-01" width="70%">
 
 - Four separate networks, each with a different trust level, all routed and filtered through one firewall.*
 
@@ -14,11 +14,11 @@ ES:  Cuatro redes separadas, cada una con distintos niveles de confianza, todas 
 
   LAN:
 
-<img src="Images/dmz-02.png" alt="dmz-02" width="70%">
+<img src="images/dmz-02.png" alt="dmz-02" width="70%">
 
   DMZ:
 
-<img src="Images/dmz-03.png" alt="dmz-03" width="70%">
+<img src="images/dmz-03.png" alt="dmz-03" width="70%">
 
 - **Testing connection between MGMT and LAN, and between MGMT and DMZ**
 
@@ -28,38 +28,38 @@ ES: **Probando la conexión entre MGMT y LAN, y entre MGMT y DMZ**
 
 De Windows a Ubuntu-Wazuh los puertos 443, 1514 y 1515: Funcionando apropiadamente
 
-<img src="Images/dmz-04.png" alt="dmz-04" width="70%">
+<img src="images/dmz-04.png" alt="dmz-04" width="70%">
 
 - Debian-DVWA to Ubuntu-Wazuh ports 1514 and 1515: Working properly
   
 ES:  De Debian-DVWA a Ubuntu-Wazuh puertos 1514 y 1515: Funcionando apropiadamente
 
-<img src="Images/dmz-05.png" alt="dmz-05" width="70%">
+<img src="images/dmz-05.png" alt="dmz-05" width="70%">
 
 - After rebooting: ports 1514 and 1515 unexpectedly started refusing connections — the actual bug. Port 443 refused too, but that one's expected: DMZ was never supposed to reach the dashboard in the first place.
 
 ES:  Después de reiniciar: los puertos 1514 y 1515 empezaron a rechazar conexiones inesperadamente — el error real. El puerto 443 también fue rechazado, pero eso es lo esperado: DMZ nunca debía poder alcanzar el dashboard.
 
-<img src="Images/dmz-06.png" alt="dmz-06" width="70%">
+<img src="images/dmz-06.png" alt="dmz-06" width="70%">
 
 - After looking through pfSense's firewall rules for configuration mistakes, everything was clean; the next step was checking that both Debian-DVWA's and Ubuntu-Wazuh's firewalls were disabled, to rule out that they were responsible for the connection bug.
 
 ES:  Después de revisar entre las reglas establecidas en pfSense firewall no se encontraron errores de configuración, el siguiente paso fue revisar que los firewalls tanto de Debian-DVWA como Ubuntu-Wazuh estuviesen inactivos para descartar que fuesen los causantes del error de conexión.
 
-<img src="Images/dmz-07.png" alt="dmz-07" width="70%">
+<img src="images/dmz-07.png" alt="dmz-07" width="70%">
 
 - Ubuntu-Wazuh firewall disabled, then running command ```ss -tulpn``` (socket statistics) to check the network and ports' status on Wazuh, all 3 ports listening.
 
 ES:   Firewall de Ubuntu-Wazuh deshabilitado, luego se corre el comando ```ss -tulpn``` (estadísticas del socket) para verificar el estado de la red y los puertos de Wazuh, los 3 puertos en funcionamiento.
 
-<img src="Images/dmz-08.png" alt="dmz-08" width="70%">
+<img src="images/dmz-08.png" alt="dmz-08" width="70%">
 
 - The next test was to reconfigure the IP address on pfSense
 
 
 ES:  La siguiente prueba fue mediante la reconfiguración de la dirección IP en pfSense.
 
-<img src="Images/dmz-09.png" alt="dmz-09" width="70%">
+<img src="images/dmz-09.png" alt="dmz-09" width="70%">
 
 - After rebooting once again, connection testing between Debian-DVWA and Ubuntu-Wazuh was refused. The next tests used pfSense's own diagnostic tools on the WebGUI.
 
@@ -67,11 +67,11 @@ ES:  Después de reiniciar nuevamente al probar la conexión desde Debian-DVWA a
 
   MGMT PING --> DMZ
 
-<img src="Images/dmz-10.png" alt="dmz-10" width="70%">
+<img src="images/dmz-10.png" alt="dmz-10" width="70%">
 
   DMZ PING --> MGMT
 
-  <img src="Images/dmz-11.png" alt="dmz-11" width="70%">
+  <img src="images/dmz-11.png" alt="dmz-11" width="70%">
 
   Both ping tests were successful, with 0% packet loss.
 
@@ -81,7 +81,7 @@ ES: En ambas pruebas el ping fue exitoso, 0% de pérdida de paquetes.
 
 La siguiente herramienta de diagnóstico era la tabla ARP, para buscar discrepancias o anomalías.
 
-<img src="Images/dmz-12.png" alt="dmz-12" width="70%">
+<img src="images/dmz-12.png" alt="dmz-12" width="70%">
 
   **Here's the lead anomaly. First, this would be normal behavior (I'll use LAN and Windows as examples): LAN's 192.168.200.1 was assigned on pfSense as the default gateway for all devices connected to pfSense on LAN. Every device on LAN with an IP address in the 192.168.200.1/24 range and 192.168.200.1 as its gateway will reach pfSense as its router's gateway. pfSense assigned this gateway, 192.168.200.1, the MAC address 52:54:00:71:bb:23, and Windows 192.168.200.40 correctly displays its NIC's MAC address, 52:54:00:e1:98:0f. Both of them had their respective MAC addresses displayed on the ARP table.
   Now the anomaly: Debian-DVWA and Ubuntu-Wazuh, which were pinging each other (theoretically) through pfSense after the Windows connection was established with pfSense, don't have their respective NICs' MAC addresses displayed on the ARP table. We can see DMZ's gateway MAC address, 52:54:00:63:63:46, and MGMT's gateway MAC, 52:54:00:90:dd:1f. Then why can't we see Debian-DVWA's and Ubuntu-Wazuh's NIC MAC addresses?**
@@ -92,7 +92,7 @@ ES: **Acá está la anomalía principal. Primero, este sería el comportamiento 
   
  ES: Una última corroboración, utilizando el comando ```arp -an``` en la línea de comandos en pfSense para asegurarse que no hay discrepancias con lo mostrado en la interfaz de la web.
 
-<img src="Images/dmz-13.png" alt="dmz-13" width="70%">
+<img src="images/dmz-13.png" alt="dmz-13" width="70%">
 
   No discrepancies.
   
@@ -102,13 +102,13 @@ ES:  No hay discrepancias.
 
 ES:  Explicación del comportamiento normal: DMZ es una red aislada, con solo 2 dispositivos, Debian-DVWA y un router (pfSense). La única conexión posible dentro de esta red es entre Debian-DVWA y el router; cuando Debian-DVWA envía un pedido ARP, el único equipo escuchando y con posibilidad de respuesta es el router. Usando el comando ```ip neighbor```, se envía un pedido de respuesta de la MAC hacia todos los equipos escuchando, para que el equipo que tiene asignada la dirección IPv4 172.16.0.1 responda de vuelta su dirección MAC. Un equipo responde, y la dirección MAC de este equipo es: 52:54:00:fb:0a:b1 ... Y aquí está, problema encontrado.
 
-<img src="Images/dmz-14.png" alt="dmz-14" width="70%">
+<img src="images/dmz-14.png" alt="dmz-14" width="70%">
 
 - What's happening here? There's a conflict: the same IP address is being used as the default gateway for the bridge between the virtual network and the host — in this case, Fedora Linux, as seen on *virbr3*. The MAC address answering the MAC request is the bridge's MAC: 52:54:00:fb:0a:b1. The default gateway on pfSense should be the one answering back the MAC request: 52:54:00:63:63:46.
 
 ES:  ¿Qué está ocurriendo aquí? Existe un conflicto: la misma dirección IP está siendo utilizada como puerta de enlace predeterminada del puente entre la red virtual y el sistema operativo anfitrión — en este caso, Fedora Linux, como se muestra en *virbr3*. La dirección MAC que responde al pedido de MAC es la MAC del puente: 52:54:00:fb:0a:b1. La puerta de enlace predeterminada de pfSense debería ser la única que responde de vuelta al pedido de MAC: 52:54:00:63:63:46.
 
-<img src="Images/dmz-15.png" alt="dmz-15" width="70%">
+<img src="images/dmz-15.png" alt="dmz-15" width="70%">
 
 - ***The solution (La solución)***
 
@@ -124,15 +124,15 @@ ES:  ¿Qué está ocurriendo aquí? Existe un conflicto: la misma dirección IP 
 
   2. Remover por completo la dirección IP de la puerta de enlace predeterminada del puente (virbr), dejando la red totalmente aislada de Fedora (host).
 
-<img src="Images/dmz-16.png" alt="dmz-16" width="70%">
+<img src="images/dmz-16.png" alt="dmz-16" width="70%">
 
 - The chosen solution was the second option; it better covers the needs of the project, since having the networks in complete isolation from the host avoids possible data contamination and information registered in logs from unforeseen communications between virtual machines and the host. 
 
 ES:  La solución elegida fue la segunda opción; esta es la que se adapta mejor a las necesidades del proyecto, ya que el total aislamiento de las redes hacia el anfitrión evita la posible contaminación en los datos e información que puede aparecer en registros por comunicación imprevista entre las máquinas virtuales y el anfitrión.
 
-<img src="Images/dmz-17.png" alt="dmz-17" width="70%">
+<img src="images/dmz-17.png" alt="dmz-17" width="70%">
 
-<img src="Images/dmz-18.png" alt="dmz-18" width="70%">
+<img src="images/dmz-18.png" alt="dmz-18" width="70%">
 
 - To wrap up, with both networks completely isolated from Fedora, it is necessary to grant Fedora access to Ubuntu-Wazuh for easy management and troubleshooting. This access is granted by 2 methods:
 
@@ -146,7 +146,7 @@ ES: Para cerrar, con ambas redes en completo aislamiento de Fedora, es necesario
     
   2. Por conexión directa (virtual), similar a un cable de serie que conecta directamente Fedora y Ubuntu-Wazuh, por medio de ***virsh console***, una herramienta de virt-manager. Esta conexión no necesita que la red se encuentre funcionando para conectar a Fedora con Ubuntu-Wazuh, lo que la hace apta para solucionar problemas y reparar la máquina virtual incluso si tiene problemas de arranque.
 
-<img src="Images/dmz-19.png" alt="dmz-19" width="70%">
+<img src="images/dmz-19.png" alt="dmz-19" width="70%">
 
   SSH enabled and working.
 
@@ -156,9 +156,9 @@ ES: SSH habilitado y funcionando
 
 ES: Después de habilitar virsh console y ejecutarlo, la consola del anfitrión respondía a la combinación de teclas para cerrar virsh console ```ctrl + ]```, así que esta línea ```console=tty0 console=ttyS0, 115200n8``` se debe agregar al archivo de configuración del GRUB de Ubuntu-Wazuh para indicar al kernel que debe enviar la salida de la consola a 2 consolas distintas al mismo tiempo, siendo ```console=ttyS0``` la consola del puerto de serie virtual que se conecta a virsh console.
 
-<img src="Images/dmz-20.png" alt="dmz-20" width="70%">
+<img src="images/dmz-20.png" alt="dmz-20" width="70%">
 
-<img src="Images/dmz-21.png" alt="dmz-21" width="70%">
+<img src="images/dmz-21.png" alt="dmz-21" width="70%">
 
   GRUB modified and updated.
 
@@ -168,7 +168,7 @@ ES:  GRUB modificado y actualizado.
 
 ES:  Probando virsh console.
 
-<img src="Images/dmz-22.png" alt="dmz-22" width="70%">
+<img src="images/dmz-22.png" alt="dmz-22" width="70%">
 
   Virsh console properly working.
 
@@ -237,11 +237,11 @@ Diagnosis proceeded layer by layer, on both Fedora and pfSense:
    Confirmed `masquerade: yes` afterward.
 4. **Retest (pfSense Diagnostics > Ping, source LAN, target `8.8.8.8`)** — still 100% packet loss, no reply at all. Masquerade alone wasn't enough.
 
-<img src="Images/AI-Int-Con01.png" alt="AI-Int-Con01" width="70%">
+<img src="images/AI-Int-Con01.png" alt="AI-Int-Con01" width="70%">
    
 5. **pfSense gateway check (System > Routing > Gateways)** — no IPv4 gateway existed on LAN at all; only IPv6 DHCP gateways plus an unused `WAN_DHCP` (IPv4), with `Default gateway IPv4` set to `Automatic`. Since WAN never gets a real DHCP lease (it's the isolated zone), "Automatic" was effectively resolving to nothing.
 
-<img src="Images/AI-Int-Con02.png" alt="AI-Int-Con02" width="70%">
+<img src="images/AI-Int-Con02.png" alt="AI-Int-Con02" width="70%">
 
 6. **Correction made along the way:** the first plan was to add a `0.0.0.0/0` static route via a new LAN gateway. pfSense's GUI does not allow static routes to `0.0.0.0/0` — the default route can only be set through **System > Routing > Gateways > Default gateway**, not the Static Routes page.
 7. **Fix applied:** added a new gateway —
@@ -252,11 +252,11 @@ Diagnosis proceeded layer by layer, on both Fedora and pfSense:
 
    Then set **Default gateway IPv4** to `LAN_FEDORA_GW` and applied. This leaves `WAN_DHCP` and pfSense's WAN config completely untouched.
 
-<img src="Images/AI-Int-Con05.png" alt="AI-Int-Con05" width="70%">
+<img src="images/AI-Int-Con05.png" alt="AI-Int-Con05" width="70%">
    
 8. **Retest** — packet loss changed character: instead of silent 100% loss, pfSense now received an explicit reply on all 3 pings — **"Destination Port Unreachable" from `192.168.200.254`** (Fedora's own bridge address). This is meaningful: the packet is now actually reaching Fedora and being actively rejected, rather than getting lost with no route.
 
-<img src="Images/AI-Int-Con04.png" alt="AI-Int-Con04" width="70%">
+<img src="images/AI-Int-Con04.png" alt="AI-Int-Con04" width="70%">
 
 ES: *El diagnóstico avanzó capa por capa, tanto en Fedora como en pfSense: reenvío de paquetes ya activo, masquerade faltante y luego corregido, sin gateway IPv4 en LAN, corrección sobre el uso incorrecto de una ruta estática 0.0.0.0/0 — en pfSense el gateway por defecto solo se configura desde Gateways, no desde Rutas Estáticas — y finalmente la adición de un gateway real en LAN apuntando al puente de Fedora. La prueba pasó de pérdida silenciosa de paquetes a una respuesta explícita de "Destination Port Unreachable" desde la propia dirección de Fedora, señal de que el paquete ya llega pero es rechazado activamente.*
 
@@ -274,23 +274,23 @@ Resolving this means changing how libvirt treats `virbr1`'s forwarding — eithe
 
 ES: *Resolver esto implica cambiar cómo libvirt trata el reenvío de `virbr1` — ya sea alterando el modo `<forward>` de la red, o insertando una regla de permiso explícita antes de las reglas REJECT propias de libvirt — sin romper el diseño deliberado donde pfSense, no libvirt, es el enrutador de esta topología. Esto aún no se ha intentado.*
 
-<img src="Images/AI-Int-Con14.png" alt="AI-Int-Con14" width="70%">
+<img src="images/AI-Int-Con14.png" alt="AI-Int-Con14" width="70%">
 
 At the same time, two more pieces were required together before the path fully worked:
 
 - **pfSense MGMT rule**, temporarily widened to Any/Any/Any for testing (later locked back down — see below).
 
-<img src="Images/AI-Int-Con24.png" alt="AI-Int-Con24" width="70%">
+<img src="images/AI-Int-Con24.png" alt="AI-Int-Con24" width="70%">
 
 - **pfSense Outbound NAT** (Hybrid mode): Interface LAN, Source `172.16.1.0/24`, Translation = Interface Address.
 
-<img src="Images/AI-Int-Con26.png" alt="AI-Int-Con26" width="70%">
+<img src="images/AI-Int-Con26.png" alt="AI-Int-Con26" width="70%">
 
 With libvirt's NAT mode, the MGMT rule, and the Outbound NAT mapping all in place together, both `pfSense → 8.8.8.8` and `Wazuh → 8.8.8.8` pings confirmed 0% packet loss.
 
 ES: *Al mismo tiempo, se necesitaron dos piezas más junto con lo anterior: la regla de MGMT ampliada temporalmente para pruebas, y el NAT de salida en modo Hybrid con la traducción hacia la dirección de LAN. Con las tres piezas juntas, las pruebas de ping confirmaron 0% de pérdida de paquetes.*
 
-<img src="Images/AI-Int-Con27.png" alt="AI-Int-Con27" width="70%">
+<img src="images/AI-Int-Con27.png" alt="AI-Int-Con27" width="70%">
 
 **DNS — the actual cause wasn't Unbound's ACL.** A `MGMT_Allow` access list already existed and was correctly configured; the REFUSED-style symptom was actually the query never leaving Wazuh at all. `resolvectl status` showed `Current Scopes: none` on `enp1s0` — systemd-resolved had no nameserver assigned, and netplan's `00-installer-config.yaml` had no `nameservers:` block to begin with. Fixed by adding:
 
@@ -315,7 +315,7 @@ Rule 2 originally selected **Echo Reply** instead of **Echo Request** — an eas
 
 ES: *Regla final de MGMT: tres reglas de privilegio mínimo — DNS hacia el resolutor de pfSense, ICMP Echo Request para diagnóstico, y TCP/443 hacia el alias de las APIs de IA. La regla ICMP inicialmente tenía seleccionado "Echo Reply" en vez de "Echo Request" por error — al ser pfSense un firewall con estado, solo la solicitud necesitaba regla explícita.*
 
-<img src="Images/AI-Int-Con29.png" alt="AI-Int-Con29" width="70%">
+<img src="images/AI-Int-Con29.png" alt="AI-Int-Con29" width="70%">
 
 Final verification — `resolvectl query`, `nc -zv <host> 443` for both Groq and Gemini, and `ping -c3 8.8.8.8` — all succeeded from Wazuh through the locked-down ruleset.
 
@@ -343,7 +343,7 @@ A WAN-to-LAN ICMP echo rule appeared correctly configured and enabled in the pfS
 
 ES: Una regla ICMP echo de WAN a LAN aparecía correctamente configurada y habilitada en la interfaz gráfica de pfSense, pero el tráfico de ping real desde Kali fallaba consistentemente con 100% de pérdida de paquetes. La investigación reveló dos problemas independientes y no relacionados, superpuestos entre sí: un problema de compilación de reglas en pfSense y un bloqueo predeterminado del firewall del host en el objetivo Windows. Ninguno era visible desde el punto de vista del otro, lo cual es la lección central de esta entrada.
 
-<img src="Images/PingICMPFail00.png" alt="PingICMPFail00.png" width="70%">
+<img src="images/PingICMPFail00.png" alt="PingICMPFail00.png" width="70%">
 
 ## Lab Topology Recap / Recapitulación de la topología
 
@@ -365,19 +365,19 @@ ES: `ping -c4 192.168.200.40` desde Kali devolvía 100% de pérdida de paquetes.
 
 1. Ruled out RFC1918/bogon blocking on the WAN interface (`Interfaces > WAN > Reserved Networks` — both boxes unchecked).
 
-<img src="Images/PingICMPFail04.png" alt="PingICMPFail04.png" width="70%">
+<img src="images/PingICMPFail04.png" alt="PingICMPFail04.png" width="70%">
 
 2. Confirmed Kali-side routing and layer-2 resolution were healthy: `ip route` showed a correct default route via 10.10.0.1, and `ip neigh show` showed the gateway MAC as `REACHABLE`.
 
-<img src="Images/PingICMPFail10.png" alt="PingICMPFail10.png" width="70%">
+<img src="images/PingICMPFail10.png" alt="PingICMPFail10.png" width="70%">
 
 3. Checked `Status > Interfaces` and found WAN's **in/out packets (block)** counter incrementing on every ping attempt (1043 blocked vs. 18 passed) — meaning packets *were* arriving at the NIC but being actively dropped by pf, not lost at the network layer.
 
-<img src="Images/PingICMPFail12.png" alt="PingICMPFail12.png" width="70%">
+<img src="images/PingICMPFail12.png" alt="PingICMPFail12.png" width="70%">
 
 4. Ruled out Floating rules (`Firewall > Rules > Floating` — none defined).
 
-<img src="Images/PingICMPFail04.png" alt="PingICMPFail04.png" width="70%">
+<img src="images/PingICMPFail04.png" alt="PingICMPFail04.png" width="70%">
 
 5. Read `Status > System Logs > Firewall` directly and found the exact drop, timestamped against a live ping attempt:
    ```
@@ -385,7 +385,7 @@ ES: `ping -c4 192.168.200.40` desde Kali devolvía 100% de pérdida de paquetes.
    ```
 6. Confirmed via console: `pfctl -sr | grep -i "10.10.0.10"` showed the RDP and DVWA WAN rules compiled correctly, but the ICMP echo rule was **entirely absent** from the compiled ruleset — despite being visible and enabled in the GUI.
 
-<img src="Images/PingICMPFail08.png" alt="PingICMPFail08.png" width="70%">
+<img src="images/PingICMPFail08.png" alt="PingICMPFail08.png" width="70%">
 
 ES:
 1. Se descartó el bloqueo de redes RFC1918/bogon en la interfaz WAN (`Interfaces > WAN > Reserved Networks`, ambas casillas desmarcadas).
@@ -427,7 +427,7 @@ Se identificó una regla superflua en la pestaña LAN (ID de seguimiento 1785875
 | **Defender Signal / Señal del defensor** | Windows Defender Firewall's default inbound rule set silently dropped ICMPv4 Echo Requests. No TCP-style reset, no ICMP unreachable — just silence, indistinguishable at first glance from an upstream network drop. | El conjunto de reglas entrantes predeterminado de Windows Defender Firewall descartaba silenciosamente las solicitudes ICMPv4 Echo. Sin reset tipo TCP, sin ICMP inalcanzable — solo silencio, indistinguible a primera vista de un descarte en la red. |
 | **Mitigation Control / Control de mitigación** | Explicit inbound allow rule added via PowerShell: `New-NetFirewallRule -Name "Allow_Ping" -DisplayName "Allow ICMPv4-In (Ping)" -Protocol ICMPv4 -IcmpType 8 -Action Allow -Enabled True` | Regla de entrada explícita agregada vía PowerShell: `New-NetFirewallRule -Name "Allow_Ping" -DisplayName "Allow ICMPv4-In (Ping)" -Protocol ICMPv4 -IcmpType 8 -Action Allow -Enabled True` |
 
-<img src="Images/PingICMPFail06.png" alt="PingICMPFail06.png" width="70%">
+<img src="images/PingICMPFail06.png" alt="PingICMPFail06.png" width="70%">
 
 ### Evidence / Evidencia
 
@@ -439,7 +439,7 @@ Packet capture on Kali's own interface was the deciding evidence — not pfSense
 0x replies
 ```
 
-<img src="Images/PingICMPFail01.png" alt="PingICMPFail01.png" width="70%">
+<img src="images/PingICMPFail01.png" alt="PingICMPFail01.png" width="70%">
 
 `PingSuccess.pcapng` — after the fix:
 ```
@@ -448,7 +448,7 @@ Packet capture on Kali's own interface was the deciding evidence — not pfSense
 ```
 
 
-<img src="Images/PingICMPFail02.png" alt="PingICMPFail02.png" width="70%">
+<img src="images/PingICMPFail02.png" alt="PingICMPFail02.png" width="70%">
 
 (x4, symmetric request/reply pairs, sub-millisecond turnaround)
 
