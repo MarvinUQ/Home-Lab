@@ -44,4 +44,4 @@ ____
 
 -[WAN -> LAN ICMP Connectivity Troubleshooting (Solución de problemas de conectividad ICMP WAN -> LAN)](Bugs-Conflicts-Fixing.md#wan---lan-icmp-connectivity-troubleshooting-soluci%C3%B3n-de-problemas-de-conectividad-icmp-wan---lan)
 
--[Stale DHCP-Learned DNS from Detached "online" NIC (Kali)](Bugs-Conflicts-Fixing.md#stale-dhcp-learned-dns-from-detached-online-nic-kali-dns-obsoleto-obtenido-por-dhcp-de-tarjeta-de-red-con-conexi%C3%B3n-a-internet-desconectada-kali)
+-[Stale DHCP-Learned DNS from Detached "online" NIC (Kali) (DNS obsoleto obtenido por DHCP de tarjeta de red "con conexión a internet" desconectada (Kali))](Bugs-Conflicts-Fixing.md#stale-dhcp-learned-dns-from-detached-online-nic-kali-dns-obsoleto-obtenido-por-dhcp-de-tarjeta-de-red-con-conexi%C3%B3n-a-internet-desconectada-kali)
