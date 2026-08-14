@@ -484,7 +484,8 @@ New-NetFirewallRule -Name "Allow_Ping" -DisplayName "Allow ICMPv4-In (Ping)" `
 
 ---
 
-### Stale DHCP-Learned DNS from Detached "online" NIC (Kali)
+## Stale DHCP-Learned DNS from Detached "online" NIC (Kali) (DNS obsoleto obtenido por DHCP de tarjeta de red "con conexión a internet" desconectada (Kali))
+
 **Symptom:** Nmap scans against Win11Lab showed DNS queries going to
 `192.168.100.1:53` instead of the documented `1.1.1.1`, despite Kali being
 statically assigned and `192.168.100.0/24` matching none of the lab's four
@@ -510,8 +511,8 @@ Confirmed via `cat /etc/resolv.conf` → `nameserver 1.1.1.1`.
 Re-run the `nmcli mod` line above (or restart networking) after every
 "online" NIC session, before the next test run.
 
-(### DNS obtenido por DHCP obsoleto desde el NIC "online" desconectado
-(Kali)
+ES:
+
 **Síntoma:** los escaneos de Nmap contra Win11Lab mostraban consultas DNS
 hacia `192.168.100.1:53` en vez de la `1.1.1.1` documentada, pese a que
 Kali tiene IP estática y esa subred no pertenece a ninguna de las cuatro
