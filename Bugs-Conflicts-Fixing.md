@@ -481,3 +481,53 @@ pfctl -sr | grep -i "10.10.0.10"
 New-NetFirewallRule -Name "Allow_Ping" -DisplayName "Allow ICMPv4-In (Ping)" `
   -Protocol ICMPv4 -IcmpType 8 -Action Allow -Enabled True
 ```
+
+---
+
+### Stale DHCP-Learned DNS from Detached "online" NIC (Kali)
+**Symptom:** Nmap scans against Win11Lab showed DNS queries going to
+`192.168.100.1:53` instead of the documented `1.1.1.1`, despite Kali being
+statically assigned and `192.168.100.0/24` matching none of the lab's four
+zones.
+
+**Root cause:** the "online" libvirt network (`-->online-->`, NAT,
+`192.168.100.0/24`, used to attach a temporary second NIC to Kali for
+package updates) had, at some earlier point, handed Kali a DHCP lease via
+its own dnsmasq. NetworkManager wrote that nameserver into
+`/etc/resolv.conf` and kept it even after the NIC was detached — nothing
+triggers a resolver refresh on NIC removal. `ipv4.method` on the primary
+connection was correctly `manual`, but `ipv4.dns` was empty, so nothing
+overrode the stale value.
+
+**Fix:**
+```bash
+sudo nmcli con mod "Wired connection 1" ipv4.ignore-auto-dns yes ipv4.dns "1.1.1.1"
+sudo nmcli con up "Wired connection 1"
+```
+Confirmed via `cat /etc/resolv.conf` → `nameserver 1.1.1.1`.
+
+**Lesson:** detaching a temporary NIC doesn't clear the DNS it handed out.
+Re-run the `nmcli mod` line above (or restart networking) after every
+"online" NIC session, before the next test run.
+
+(### DNS obtenido por DHCP obsoleto desde el NIC "online" desconectado
+(Kali)
+**Síntoma:** los escaneos de Nmap contra Win11Lab mostraban consultas DNS
+hacia `192.168.100.1:53` en vez de la `1.1.1.1` documentada, pese a que
+Kali tiene IP estática y esa subred no pertenece a ninguna de las cuatro
+zonas del laboratorio.
+
+**Causa raíz:** la red libvirt "online" (NAT, `192.168.100.0/24`, usada
+para conectar temporalmente un segundo NIC a Kali para actualizaciones) le
+había asignado a Kali un lease DHCP mediante su propio dnsmasq.
+NetworkManager escribió ese servidor de nombres en `/etc/resolv.conf` y lo
+mantuvo incluso después de desconectar el NIC. `ipv4.method` en la
+conexión principal era correctamente `manual`, pero `ipv4.dns` estaba
+vacío.
+
+**Corrección:** (comando arriba). Confirmado con `cat /etc/resolv.conf`.
+
+**Lección:** desconectar un NIC temporal no limpia el DNS que asignó.
+Repetir el comando `nmcli mod` después de cada sesión con el NIC "online",
+antes de la siguiente prueba.)
+
