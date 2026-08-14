@@ -43,3 +43,5 @@ ____
 -[Wazuh MGMT zone has no internet path: AiSOC calls to Gemini/Groq fail. (Zona MGMT de Wazuh sin acceso a internet: las llamadas de AiSOC a Gemini/Groq fallan)](Bugs-Conflicts-Fixing.md#wazuh-mgmt-zone-has-no-internet-path-aisoc-calls-to-geminigroq-fail-zona-mgmt-de-wazuh-sin-acceso-a-internet-las-llamadas-de-aisoc-a-geminigroq-fallan)
 
 -[WAN -> LAN ICMP Connectivity Troubleshooting (Solución de problemas de conectividad ICMP WAN -> LAN)](Bugs-Conflicts-Fixing.md#wan---lan-icmp-connectivity-troubleshooting-soluci%C3%B3n-de-problemas-de-conectividad-icmp-wan---lan)
+
+-[Stale DHCP-Learned DNS from Detached "online" NIC (Kali)](Bugs-Conflicts-Fixing.md#stale-dhcp-learned-dns-from-detached-online-nic-kali-dns-obsoleto-obtenido-por-dhcp-de-tarjeta-de-red-con-conexi%C3%B3n-a-internet-desconectada-kali)
