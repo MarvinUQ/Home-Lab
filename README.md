@@ -38,6 +38,10 @@ These are some of the concepts and behaviors of operating systems and tools this
 
 ____
 
+## White-Box-Testing: This conflicts, bugs and solutions are part of a larning method in which I had access to the entire process from pentesting to SOC analysis, to have a better understanding of how each role works closer to real life I will change the focus to a Black-Box-Testing approach that will help me on learning by testing and working each role focused on their respective tools, techniques and thought process.
+
+## ES:
+
 -[The DMZ <--> MGMT connection conflict. (Conflicto de comunicación DMZ <--> MGMT.)](Bugs-Conflicts-Fixing.md#**The-DMZ-<-->-MGMT-connection-conflict.-(Conflicto-de-comunicación-DMZ-<-->-MGMT.)**)
 
 -[Wazuh MGMT zone has no internet path: AiSOC calls to Gemini/Groq fail. (Zona MGMT de Wazuh sin acceso a internet: las llamadas de AiSOC a Gemini/Groq fallan)](Bugs-Conflicts-Fixing.md#wazuh-mgmt-zone-has-no-internet-path-aisoc-calls-to-geminigroq-fail-zona-mgmt-de-wazuh-sin-acceso-a-internet-las-llamadas-de-aisoc-a-geminigroq-fallan)
