@@ -2,7 +2,7 @@
 
 # Home-lab Project.
 
-<img src="Images/TopoMain.png" alt="TopoMain" width="90%">
+<img src="images/TopoMain.png" alt="TopoMain" width="90%">
 
 ## Lab Infrastructure & Network Architecture
 
